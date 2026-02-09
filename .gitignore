@@ -1,0 +1,29 @@
+# Java / Gradle
+server/build/
+server/.gradle/
+*.class
+*.jar
+*.war
+
+# Node
+client/node_modules/
+client/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+*.env.local
+
+# Uploads (runtime)
+server/uploads/*
+!server/uploads/.gitkeep
