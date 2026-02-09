@@ -1,17 +1,23 @@
 package com.gugarden.controller;
 
 import com.gugarden.dto.request.*;
+import com.gugarden.entity.User;
 import com.gugarden.security.UserPrincipal;
 import com.gugarden.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -21,6 +27,15 @@ public class AuthController {
 
     @Value("${app.client-url}")
     private String clientUrl;
+
+    @Value("${app.naver.client-id}")
+    private String naverClientId;
+
+    @Value("${app.naver.client-secret}")
+    private String naverClientSecret;
+
+    @Value("${app.naver.callback-url}")
+    private String naverCallbackUrl;
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody RegisterRequest request) {
@@ -57,37 +72,95 @@ public class AuthController {
         return ResponseEntity.ok(authService.deleteAccount(principal.getId()));
     }
 
-    // 소셜 로그인은 Spring Security OAuth2 Client로 처리하거나
-    // 프론트에서 직접 OAuth 처리 후 토큰을 백엔드로 전달하는 방식으로 구현
-    // 여기서는 간단히 리다이렉트 방식으로 구현
+    // --- 네이버 OAuth ---
 
     @GetMapping("/naver")
     public ResponseEntity<Void> naverLogin() {
-        // Naver OAuth 시작 - Spring Security OAuth2 Client가 처리
+        String state = UUID.randomUUID().toString();
+        String authUrl = "https://nid.naver.com/oauth2.0/authorize"
+                + "?client_id=" + naverClientId
+                + "&redirect_uri=" + URLEncoder.encode(naverCallbackUrl, StandardCharsets.UTF_8)
+                + "&response_type=code"
+                + "&state=" + state;
+
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/oauth2/authorization/naver")
+                .header("Location", authUrl)
                 .build();
     }
 
     @GetMapping("/naver/callback")
     public ResponseEntity<Void> naverCallback(@RequestParam String code, @RequestParam String state) {
-        // OAuth callback 처리는 별도 구현 필요
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", clientUrl + "/auth/callback")
-                .build();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            // 1. 액세스 토큰 요청
+            String tokenUrl = "https://nid.naver.com/oauth2.0/token"
+                    + "?grant_type=authorization_code"
+                    + "&client_id=" + naverClientId
+                    + "&client_secret=" + naverClientSecret
+                    + "&code=" + code
+                    + "&state=" + state;
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> tokenResponse = restTemplate.getForObject(tokenUrl, Map.class);
+            String accessToken = (String) tokenResponse.get("access_token");
+
+            if (accessToken == null) {
+                log.error("네이버 토큰 발급 실패: {}", tokenResponse);
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header("Location", clientUrl + "/auth/callback?error=token_failed")
+                        .build();
+            }
+
+            // 2. 사용자 프로필 조회
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(accessToken);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            @SuppressWarnings("unchecked")
+            ResponseEntity<Map> profileResponse = restTemplate.exchange(
+                    "https://openapi.naver.com/v1/nid/me",
+                    HttpMethod.GET, entity, Map.class);
+
+            @SuppressWarnings("unchecked")
+            Map<String, Object> profile = (Map<String, Object>) profileResponse.getBody().get("response");
+
+            String providerId = (String) profile.get("id");
+            String email = (String) profile.get("email");
+            String name = (String) profile.get("name");
+            String phone = (String) profile.get("mobile");
+            String profileImage = (String) profile.get("profile_image");
+
+            // 3. 사용자 생성/조회 + JWT 발급
+            String jwt = authService.handleSocialLogin(
+                    User.Provider.naver, providerId, email, name, phone, profileImage);
+
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", clientUrl + "/auth/callback?token=" + jwt)
+                    .build();
+
+        } catch (Exception e) {
+            log.error("네이버 로그인 처리 실패", e);
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", clientUrl + "/auth/callback?error=login_failed")
+                    .build();
+        }
     }
+
+    // --- 카카오 OAuth (TODO: 카카오 설정 후 구현) ---
 
     @GetMapping("/kakao")
     public ResponseEntity<Void> kakaoLogin() {
+        // 카카오 client-id가 설정되지 않은 상태
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/oauth2/authorization/kakao")
+                .header("Location", clientUrl + "/login?error=kakao_not_configured")
                 .build();
     }
 
     @GetMapping("/kakao/callback")
     public ResponseEntity<Void> kakaoCallback(@RequestParam String code) {
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", clientUrl + "/auth/callback")
+                .header("Location", clientUrl + "/auth/callback?error=kakao_not_configured")
                 .build();
     }
 }

@@ -245,7 +245,7 @@ function Products() {
       submitData.append('isFeatured', formData.isFeatured)
 
       if (thumbnailFile) {
-        submitData.append('thumbnail', thumbnailFile)
+        submitData.append('thumbnailFile', thumbnailFile)
       } else if (formData.thumbnail) {
         submitData.append('thumbnail', formData.thumbnail)
       }
