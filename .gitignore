@@ -1,29 +1,50 @@
-# Java / Gradle
-server/build/
+# ===== Node (client) =====
+client/node_modules/
+client/dist-ssr/
+client/npm-debug.log*
+client/yarn-debug.log*
+client/pnpm-debug.log*
+
+# ===== Java / Gradle (server) =====
 server/.gradle/
+server/build/
 *.class
 *.jar
 *.war
+*.ear
 
-# Node
-client/node_modules/
-client/dist/
+# ===== 환경 설정 / 시크릿 =====
+.env
+.env.*
+*.env.local
+server/src/main/resources/application-prod.yml
 
-# IDE
+# ===== 업로드 (런타임 생성) =====
+uploads/
+server/uploads/*
+!server/uploads/.gitkeep
+
+# ===== IDE =====
 .idea/
 *.iml
 .vscode/
 *.swp
 *.swo
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# OS
+# ===== OS =====
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Env
-.env
-*.env.local
+# ===== 로그 =====
+*.log
+logs/
 
-# Uploads (runtime)
-server/uploads/*
-!server/uploads/.gitkeep
+# ===== Claude Code =====
+.claude/
