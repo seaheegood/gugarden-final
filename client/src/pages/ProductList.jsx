@@ -137,8 +137,8 @@ function ProductList() {
           {!loading && sortedProducts.length > 0 && (
             <div className="grid-4">
               {sortedProducts.map((product) => (
-                <Link key={product.id} to={`/product/${product.id}`} style={{ display: 'block' }}>
-                  <div style={{ aspectRatio: '1/1', background: '#1a1a1a', position: 'relative', marginBottom: '16px', overflow: 'hidden' }}>
+                <Link key={product.id} to={`/product/${product.id}`} className="product-card" style={{ display: 'block' }}>
+                  <div className="product-image-wrap" style={{ aspectRatio: '1/1', background: '#1a1a1a', position: 'relative', marginBottom: '16px' }}>
                     {product.thumbnail && (
                       <img
                         src={product.thumbnail}

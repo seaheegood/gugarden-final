@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
+import useScrollAnimation from "../hooks/useScrollAnimation";
 
 function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  // 스크롤 애니메이션 refs
+  const introRef = useScrollAnimation();
+  const categoryRef = useScrollAnimation();
+  const featuredRef = useScrollAnimation();
+  const rentalRef = useScrollAnimation();
+  const featureRef = useScrollAnimation();
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -50,7 +58,7 @@ function Home() {
         />
         <div style={{ textAlign: "center", position: "relative", zIndex: 1, padding: "0 20px" }}>
           <p
-            className="hero-subtitle"
+            className="hero-subtitle hero-animate"
             style={{
               letterSpacing: "0.4em",
               color: "#ccc",
@@ -60,7 +68,7 @@ function Home() {
             Nature in Glass
           </p>
           <h1
-            className="hero-title"
+            className="hero-title hero-animate-delay-1"
             style={{
               fontWeight: 200,
               letterSpacing: "0.2em",
@@ -70,11 +78,12 @@ function Home() {
           >
             구의정원
           </h1>
-          <p style={{ color: "#ccc", marginBottom: "48px" }}>
+          <p className="hero-animate-delay-2" style={{ color: "#ccc", marginBottom: "48px" }}>
             자연을 담은 작은 정원
           </p>
           <Link
             to="/terrarium"
+            className="btn-hover hero-animate-delay-3"
             style={{
               border: "1px solid #fff",
               padding: "12px 40px",
@@ -91,6 +100,8 @@ function Home() {
       {/* 소개 */}
       <section className="responsive-section" style={{ background: "#000" }}>
         <div
+          ref={introRef}
+          className="animate-on-scroll animate-fade-only"
           style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}
         >
           <h2
@@ -133,10 +144,12 @@ function Home() {
           </h2>
 
           <div
-            className="grid-3"
+            ref={categoryRef}
+            className="grid-3 animate-on-scroll"
           >
-            <Link to="/terrarium" style={{ display: "block" }}>
+            <Link to="/terrarium" className="category-card delay-1" style={{ display: "block" }}>
               <div
+                className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
                   backgroundImage: "url(/images/terrarium_main.jpeg)",
@@ -152,8 +165,9 @@ function Home() {
                 밀폐된 유리 안의 작은 생태계
               </p>
             </Link>
-            <Link to="/vivarium" style={{ display: "block" }}>
+            <Link to="/vivarium" className="category-card delay-2" style={{ display: "block" }}>
               <div
+                className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
                   backgroundImage: "url(/images/vivarium_main.jpeg)",
@@ -169,8 +183,9 @@ function Home() {
                 살아있는 자연을 담은 공간
               </p>
             </Link>
-            <Link to="/kit" style={{ display: "block" }}>
+            <Link to="/kit" className="category-card delay-3" style={{ display: "block" }}>
               <div
+                className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
                   backgroundImage: "url(/images/kit_main.jpeg)",
@@ -209,14 +224,16 @@ function Home() {
               Selected Products
             </h2>
 
-            <div className="grid-4">
-              {featuredProducts.slice(0, 4).map((product) => (
+            <div ref={featuredRef} className="grid-4 animate-on-scroll">
+              {featuredProducts.slice(0, 4).map((product, idx) => (
                 <Link
                   key={product.id}
                   to={`/product/${product.id}`}
+                  className={`product-card delay-${idx + 1}`}
                   style={{ display: "block" }}
                 >
                   <div
+                    className="product-image-wrap"
                     style={{
                       aspectRatio: "1/1",
                       background: "#1a1a1a",
@@ -248,6 +265,7 @@ function Home() {
             <div style={{ textAlign: "center", marginTop: "64px" }}>
               <Link
                 to="/terrarium"
+                className="btn-hover"
                 style={{
                   border: "1px solid #444",
                   padding: "12px 40px",
@@ -266,7 +284,8 @@ function Home() {
       {/* 렌탈 */}
       <section className="responsive-section" style={{ background: "#000" }}>
         <div
-          className="responsive-container grid-2"
+          ref={rentalRef}
+          className="responsive-container grid-2 animate-on-scroll"
           style={{
             alignItems: "center",
           }}
@@ -312,6 +331,7 @@ function Home() {
             </p>
             <Link
               to="/rental"
+              className="btn-hover"
               style={{
                 border: "1px solid #444",
                 padding: "12px 32px",
@@ -335,9 +355,10 @@ function Home() {
         }}
       >
         <div
-          className="responsive-container grid-3"
+          ref={featureRef}
+          className="responsive-container grid-3 animate-on-scroll"
         >
-          <div>
+          <div className="delay-1">
             <h3 style={{ fontSize: "15px", marginBottom: "12px" }}>
               Handcrafted
             </h3>
@@ -345,7 +366,7 @@ function Home() {
               모든 작품은 장인의 손으로 하나하나 정성껏 제작됩니다.
             </p>
           </div>
-          <div>
+          <div className="delay-2">
             <h3 style={{ fontSize: "15px", marginBottom: "12px" }}>
               Safe Delivery
             </h3>
@@ -353,7 +374,7 @@ function Home() {
               안전한 포장과 신속한 배송으로 완벽하게 전달합니다.
             </p>
           </div>
-          <div>
+          <div className="delay-3">
             <h3 style={{ fontSize: "15px", marginBottom: "12px" }}>
               Care Guide
             </h3>
