@@ -61,7 +61,7 @@ function Home() {
             className="hero-subtitle hero-animate"
             style={{
               letterSpacing: "0.4em",
-              color: "#ccc",
+              color: "#ddd",
               marginBottom: "24px",
             }}
           >
@@ -70,7 +70,7 @@ function Home() {
           <h1
             className="hero-title hero-animate-delay-1"
             style={{
-              fontWeight: 200,
+              fontWeight: 300,
               letterSpacing: "0.2em",
               marginBottom: "16px",
               color: "#fff",
@@ -78,7 +78,7 @@ function Home() {
           >
             구의정원
           </h1>
-          <p className="hero-animate-delay-2" style={{ color: "#ccc", marginBottom: "48px" }}>
+          <p className="hero-animate-delay-2" style={{ color: "#ddd", marginBottom: "48px" }}>
             자연을 담은 작은 정원
           </p>
           <Link
@@ -107,7 +107,7 @@ function Home() {
           <h2
             className="section-title"
             style={{
-              fontWeight: 200,
+              fontWeight: 300,
               marginBottom: "24px",
               lineHeight: 1.6,
             }}
@@ -116,7 +116,7 @@ function Home() {
             <br />
             자연의 아름다움을 일상으로
           </h2>
-          <p style={{ color: "#999", fontSize: "15px", lineHeight: 1.8 }}>
+          <p style={{ color: "#bbb", fontSize: "15px", lineHeight: 1.8 }}>
             구의정원은 테라리움과 비바리움을 통해 도시 속에서도 자연과 함께하는
             삶을 제안합니다.
           </p>
@@ -128,9 +128,9 @@ function Home() {
         <div className="responsive-container">
           <p
             style={{
-              fontSize: "12px",
+              fontSize: "13px",
               letterSpacing: "0.3em",
-              color: "#666",
+              color: "#888",
               marginBottom: "12px",
             }}
           >
@@ -138,7 +138,7 @@ function Home() {
           </p>
           <h2
             className="section-title"
-            style={{ fontWeight: 200, marginBottom: "48px" }}
+            style={{ fontWeight: 300, marginBottom: "48px" }}
           >
             Our Collection
           </h2>
@@ -158,10 +158,10 @@ function Home() {
                   marginBottom: "16px",
                 }}
               />
-              <h3 style={{ fontSize: "16px", marginBottom: "8px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>
                 Terrarium
               </h3>
-              <p style={{ fontSize: "13px", color: "#888" }}>
+              <p style={{ fontSize: "14px", color: "#aaa" }}>
                 밀폐된 유리 안의 작은 생태계
               </p>
             </Link>
@@ -176,10 +176,10 @@ function Home() {
                   marginBottom: "16px",
                 }}
               />
-              <h3 style={{ fontSize: "16px", marginBottom: "8px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>
                 Vivarium
               </h3>
-              <p style={{ fontSize: "13px", color: "#888" }}>
+              <p style={{ fontSize: "14px", color: "#aaa" }}>
                 살아있는 자연을 담은 공간
               </p>
             </Link>
@@ -194,8 +194,8 @@ function Home() {
                   marginBottom: "16px",
                 }}
               />
-              <h3 style={{ fontSize: "16px", marginBottom: "8px" }}>Kit</h3>
-              <p style={{ fontSize: "13px", color: "#888" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>Kit</h3>
+              <p style={{ fontSize: "14px", color: "#aaa" }}>
                 직접 만드는 나만의 정원
               </p>
             </Link>
@@ -209,9 +209,9 @@ function Home() {
           <div className="responsive-container">
             <p
               style={{
-                fontSize: "12px",
+                fontSize: "13px",
                 letterSpacing: "0.3em",
-                color: "#666",
+                color: "#888",
                 marginBottom: "12px",
               }}
             >
@@ -219,7 +219,7 @@ function Home() {
             </p>
             <h2
               className="section-title"
-              style={{ fontWeight: 200, marginBottom: "48px" }}
+              style={{ fontWeight: 300, marginBottom: "48px" }}
             >
               Selected Products
             </h2>
@@ -252,10 +252,10 @@ function Home() {
                       />
                     )}
                   </div>
-                  <h4 style={{ fontSize: "14px", marginBottom: "4px" }}>
+                  <h4 style={{ fontSize: "14px", fontWeight: 400, marginBottom: "4px" }}>
                     {product.name}
                   </h4>
-                  <p style={{ fontSize: "13px", color: "#888" }}>
+                  <p style={{ fontSize: "14px", color: "#aaa" }}>
                     ₩ {formatPrice(product.sale_price || product.price)}
                   </p>
                 </Link>
@@ -301,9 +301,9 @@ function Home() {
           <div>
             <p
               style={{
-                fontSize: "12px",
+                fontSize: "13px",
                 letterSpacing: "0.3em",
-                color: "#666",
+                color: "#888",
                 marginBottom: "12px",
               }}
             >
@@ -312,7 +312,7 @@ function Home() {
             <h2
               style={{
                 fontSize: "24px",
-                fontWeight: 200,
+                fontWeight: 300,
                 marginBottom: "24px",
               }}
             >
@@ -321,7 +321,7 @@ function Home() {
             <p
               style={{
                 fontSize: "15px",
-                color: "#999",
+                color: "#bbb",
                 lineHeight: 1.8,
                 marginBottom: "32px",
               }}
@@ -359,26 +359,26 @@ function Home() {
           className="responsive-container grid-3 animate-on-scroll"
         >
           <div className="delay-1">
-            <h3 style={{ fontSize: "15px", marginBottom: "12px" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "12px" }}>
               Handcrafted
             </h3>
-            <p style={{ fontSize: "14px", color: "#999", lineHeight: 1.7 }}>
+            <p style={{ fontSize: "14px", color: "#bbb", lineHeight: 1.7 }}>
               모든 작품은 장인의 손으로 하나하나 정성껏 제작됩니다.
             </p>
           </div>
           <div className="delay-2">
-            <h3 style={{ fontSize: "15px", marginBottom: "12px" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "12px" }}>
               Safe Delivery
             </h3>
-            <p style={{ fontSize: "14px", color: "#999", lineHeight: 1.7 }}>
+            <p style={{ fontSize: "14px", color: "#bbb", lineHeight: 1.7 }}>
               안전한 포장과 신속한 배송으로 완벽하게 전달합니다.
             </p>
           </div>
           <div className="delay-3">
-            <h3 style={{ fontSize: "15px", marginBottom: "12px" }}>
+            <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "12px" }}>
               Care Guide
             </h3>
-            <p style={{ fontSize: "14px", color: "#999", lineHeight: 1.7 }}>
+            <p style={{ fontSize: "14px", color: "#bbb", lineHeight: 1.7 }}>
               상세한 관리 가이드와 지속적인 케어 상담을 제공합니다.
             </p>
           </div>
