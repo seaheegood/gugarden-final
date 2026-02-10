@@ -26,6 +26,7 @@ public class AdminService {
     private final UserRepository userRepository;
     private final RentalInquiryRepository rentalInquiryRepository;
     private final FileUploadService fileUploadService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     // ==================== Dashboard ====================
 
@@ -475,6 +476,8 @@ public class AdminService {
 
         user.setRole(User.Role.valueOf(role));
         userRepository.save(user);
+
+        tokenBlacklistService.invalidateUser(userId);
 
         return Map.of("message", "회원 역할이 변경되었습니다.");
     }

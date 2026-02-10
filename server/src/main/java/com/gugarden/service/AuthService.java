@@ -25,6 +25,7 @@ public class AuthService {
     private final CartItemRepository cartItemRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Transactional
     public Map<String, Object> register(RegisterRequest request) {
@@ -143,7 +144,14 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
-        return Map.of("message", "비밀번호가 변경되었습니다.");
+        tokenBlacklistService.invalidateUser(userId);
+
+        String newToken = jwtTokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole().name());
+
+        Map<String, String> result = new HashMap<>();
+        result.put("message", "비밀번호가 변경되었습니다.");
+        result.put("token", newToken);
+        return result;
     }
 
     @Transactional
@@ -167,6 +175,8 @@ public class AuthService {
         user.setProfileImage(null);
 
         userRepository.save(user);
+
+        tokenBlacklistService.invalidateUser(userId);
 
         return Map.of("message", "회원 탈퇴가 완료되었습니다.");
     }
