@@ -59,7 +59,7 @@ class AuthApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.token").isString())
+                .andExpect(header().exists("Set-Cookie"))
                 .andExpect(jsonPath("$.user.email").value("newuser@test.com"))
                 .andExpect(jsonPath("$.message").value("회원가입이 완료되었습니다."));
     }
@@ -92,7 +92,7 @@ class AuthApiTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isString())
+                .andExpect(header().exists("Set-Cookie"))
                 .andExpect(jsonPath("$.user.email").value("auth-test@test.com"))
                 .andExpect(jsonPath("$.message").value("로그인 성공"));
     }
