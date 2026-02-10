@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
 
-const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY || 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq'
+const TOSS_CLIENT_KEY = import.meta.env.VITE_TOSS_CLIENT_KEY
 
 function Checkout() {
   const navigate = useNavigate()
@@ -116,6 +116,10 @@ function Checkout() {
           }
         } else {
           // 토스페이먼츠 SDK로 결제창 호출
+          if (!TOSS_CLIENT_KEY) {
+            alert('토스페이먼츠 클라이언트 키가 설정되지 않았습니다.')
+            return
+          }
           const tossPayments = window.TossPayments(TOSS_CLIENT_KEY)
           const clientUrl = import.meta.env.VITE_CLIENT_URL || window.location.origin
 
