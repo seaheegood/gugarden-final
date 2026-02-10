@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/gugarden?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: qwe123
+    password: ${DB_PASSWORD:qwe123}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
@@ -32,7 +32,7 @@ spring:
 
 app:
   jwt:
-    secret: gugarden_jwt_secret_dev_key_2025
+    secret: ${JWT_SECRET:dev_only_gugarden_jwt_secret_key_2025_minimum_64_characters_long!!}
     expiration: 604800000  # 7 days in ms
   upload:
     dir: ./uploads
@@ -40,9 +40,9 @@ app:
 
   # Naver OAuth
   naver:
-    client-id: GLy3tEPCuVKrkgD7bmaw
-    client-secret: 7EzKnLYv4h
-    callback-url: http://localhost:8080/api/auth/naver/callback
+    client-id: ${NAVER_CLIENT_ID:}
+    client-secret: ${NAVER_CLIENT_SECRET:}
+    callback-url: ${NAVER_CALLBACK_URL:http://localhost:8080/api/auth/naver/callback}
 
   # NaverPay
   naverpay:
