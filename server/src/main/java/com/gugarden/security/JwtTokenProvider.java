@@ -66,4 +66,29 @@ public class JwtTokenProvider {
             return false;
         }
     }
+
+    public String generateStateToken() {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 300_000); // 5분
+
+        return Jwts.builder()
+                .claim("purpose", "oauth_state")
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(key)
+                .compact();
+    }
+
+    public boolean validateStateToken(String stateToken) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(stateToken)
+                    .getPayload();
+            return "oauth_state".equals(claims.get("purpose", String.class));
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
 }
