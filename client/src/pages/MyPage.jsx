@@ -104,8 +104,8 @@ function MyPage() {
     }
   }
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     navigate('/')
   }
 
@@ -125,7 +125,7 @@ function MyPage() {
     try {
       await api.delete('/auth/me')
       alert('회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.')
-      logout()
+      await logout()
       navigate('/')
     } catch (error) {
       alert(error.response?.data?.error || '회원 탈퇴에 실패했습니다.')

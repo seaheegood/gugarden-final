@@ -9,7 +9,7 @@ function AuthCallback() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const token = searchParams.get('token')
+    const code = searchParams.get('code')
     const errorParam = searchParams.get('error')
 
     if (errorParam) {
@@ -18,17 +18,17 @@ function AuthCallback() {
       return
     }
 
-    if (token) {
-      handleSocialLogin(token)
+    if (code) {
+      handleSocialLogin(code)
     } else {
       setError('인증 정보를 찾을 수 없습니다.')
       setTimeout(() => navigate('/login'), 3000)
     }
   }, [searchParams])
 
-  const handleSocialLogin = async (token) => {
+  const handleSocialLogin = async (code) => {
     try {
-      const user = await socialLogin(token)
+      const user = await socialLogin(code)
       if (user?.role === 'admin') {
         navigate('/admin', { replace: true })
       } else {

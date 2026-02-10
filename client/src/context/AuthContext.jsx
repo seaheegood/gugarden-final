@@ -12,17 +12,11 @@ export function AuthProvider({ children }) {
   }, [])
 
   const checkAuth = async () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setLoading(false)
-      return
-    }
-
     try {
       const response = await api.get('/auth/me')
       setUser(response.data.user)
     } catch (error) {
-      localStorage.removeItem('token')
+      // 쿠키가 없거나 만료된 경우
     } finally {
       setLoading(false)
     }
@@ -30,22 +24,24 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await api.post('/auth/login', { email, password })
-    const { token, user } = response.data
-    localStorage.setItem('token', token)
+    const { user } = response.data
     setUser(user)
     return user
   }
 
   const register = async (data) => {
     const response = await api.post('/auth/register', data)
-    const { token, user } = response.data
-    localStorage.setItem('token', token)
+    const { user } = response.data
     setUser(user)
     return user
   }
 
-  const logout = () => {
-    localStorage.removeItem('token')
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout')
+    } catch (error) {
+      // 로그아웃 실패해도 클라이언트 상태는 초기화
+    }
     setUser(null)
   }
 
@@ -53,9 +49,8 @@ export function AuthProvider({ children }) {
     setUser((prev) => ({ ...prev, ...userData }))
   }
 
-  const socialLogin = async (token) => {
-    localStorage.setItem('token', token)
-    const response = await api.get('/auth/me')
+  const socialLogin = async (code) => {
+    const response = await api.post('/auth/exchange-code', { code })
     setUser(response.data.user)
     return response.data.user
   }
