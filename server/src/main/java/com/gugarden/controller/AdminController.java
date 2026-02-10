@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +47,7 @@ public class AdminController {
     @PutMapping("/orders/{id}/status")
     public ResponseEntity<Map<String, Object>> updateOrderStatus(
             @PathVariable Integer id,
-            @RequestBody StatusRequest request) {
+            @Valid @RequestBody StatusRequest request) {
         return ResponseEntity.ok(adminService.updateOrderStatus(id, request.getStatus()));
     }
 
@@ -136,7 +137,7 @@ public class AdminController {
     public ResponseEntity<Map<String, String>> updateUserRole(
             @PathVariable Integer id,
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody RoleRequest request) {
+            @Valid @RequestBody RoleRequest request) {
         return ResponseEntity.ok(adminService.updateUserRole(id, request.getRole(), principal.getId()));
     }
 
@@ -165,7 +166,7 @@ public class AdminController {
     @PutMapping("/rental-inquiries/{id}/status")
     public ResponseEntity<Map<String, Object>> updateRentalInquiryStatus(
             @PathVariable Integer id,
-            @RequestBody StatusRequest request) {
+            @Valid @RequestBody StatusRequest request) {
         return ResponseEntity.ok(adminService.updateRentalInquiryStatus(id, request.getStatus()));
     }
 

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,13 +39,13 @@ public class AuthController {
     private String naverCallbackUrl;
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody RegisterRequest request) {
         Map<String, Object> result = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
@@ -56,14 +57,14 @@ public class AuthController {
     @PutMapping("/me")
     public ResponseEntity<Map<String, String>> updateProfile(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody UpdateProfileRequest request) {
+            @Valid @RequestBody UpdateProfileRequest request) {
         return ResponseEntity.ok(authService.updateProfile(principal.getId(), request));
     }
 
     @PutMapping("/password")
     public ResponseEntity<Map<String, String>> changePassword(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody ChangePasswordRequest request) {
+            @Valid @RequestBody ChangePasswordRequest request) {
         return ResponseEntity.ok(authService.changePassword(principal.getId(), request));
     }
 

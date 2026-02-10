@@ -7,6 +7,7 @@ import com.gugarden.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -26,7 +27,7 @@ public class CartController {
     @PostMapping
     public ResponseEntity<Map<String, String>> addToCart(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody CartRequest request) {
+            @Valid @RequestBody CartRequest request) {
         return ResponseEntity.ok(cartService.addToCart(principal.getId(), request.getProductId(), request.getQuantity()));
     }
 
@@ -34,7 +35,7 @@ public class CartController {
     public ResponseEntity<Map<String, String>> updateQuantity(
             @PathVariable Integer id,
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody CartUpdateRequest request) {
+            @Valid @RequestBody CartUpdateRequest request) {
         return ResponseEntity.ok(cartService.updateQuantity(id, principal.getId(), request.getQuantity()));
     }
 

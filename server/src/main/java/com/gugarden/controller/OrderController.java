@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -33,7 +34,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<Map<String, Object>> createOrder(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody OrderRequest request) {
+            @Valid @RequestBody OrderRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(principal.getId(), request));
     }
 
