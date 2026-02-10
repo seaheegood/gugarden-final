@@ -2,6 +2,9 @@ package com.gugarden.controller;
 
 import com.gugarden.dto.request.*;
 import com.gugarden.entity.User;
+import com.gugarden.security.AuthCodeStore;
+import com.gugarden.security.CookieUtil;
+import com.gugarden.security.JwtTokenProvider;
 import com.gugarden.security.UserPrincipal;
 import com.gugarden.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +18,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -25,6 +28,9 @@ import java.util.UUID;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CookieUtil cookieUtil;
+    private final AuthCodeStore authCodeStore;
 
     @Value("${app.client-url}")
     private String clientUrl;
@@ -41,12 +47,27 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody RegisterRequest request) {
         Map<String, Object> result = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+
+        String token = (String) result.get("token");
+        ResponseCookie cookie = cookieUtil.createAuthCookie(token, 604800);
+        result.remove("token");
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(result);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+        Map<String, Object> result = authService.login(request);
+
+        String token = (String) result.get("token");
+        ResponseCookie cookie = cookieUtil.createAuthCookie(token, 604800);
+        result.remove("token");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(result);
     }
 
     @GetMapping("/me")
@@ -65,24 +86,72 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> changePassword(
             @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody ChangePasswordRequest request) {
-        return ResponseEntity.ok(authService.changePassword(principal.getId(), request));
+        Map<String, String> result = authService.changePassword(principal.getId(), request);
+
+        String newToken = result.get("token");
+        ResponseCookie cookie = cookieUtil.createAuthCookie(newToken, 604800);
+        result.remove("token");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(result);
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<Map<String, String>> deleteAccount(@AuthenticationPrincipal UserPrincipal principal) {
-        return ResponseEntity.ok(authService.deleteAccount(principal.getId()));
+        Map<String, String> result = authService.deleteAccount(principal.getId());
+        ResponseCookie clearCookie = cookieUtil.createClearCookie();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
+                .body(result);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout() {
+        ResponseCookie clearCookie = cookieUtil.createClearCookie();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
+                .body(Map.of("message", "로그아웃되었습니다."));
+    }
+
+    @PostMapping("/exchange-code")
+    public ResponseEntity<Map<String, Object>> exchangeCode(@RequestBody Map<String, String> request) {
+        String code = request.get("code");
+        if (code == null || code.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("error", (Object) "코드가 필요합니다."));
+        }
+
+        String jwt = authCodeStore.exchangeCode(code);
+        if (jwt == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", (Object) "유효하지 않거나 만료된 코드입니다."));
+        }
+
+        ResponseCookie cookie = cookieUtil.createAuthCookie(jwt, 604800);
+
+        Integer userId = jwtTokenProvider.getUserId(jwt);
+        Map<String, Object> meResult = authService.getMe(userId);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "로그인 성공");
+        result.put("user", meResult.get("user"));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(result);
     }
 
     // --- 네이버 OAuth ---
 
     @GetMapping("/naver")
     public ResponseEntity<Void> naverLogin() {
-        String state = UUID.randomUUID().toString();
+        String state = jwtTokenProvider.generateStateToken();
         String authUrl = "https://nid.naver.com/oauth2.0/authorize"
                 + "?client_id=" + naverClientId
                 + "&redirect_uri=" + URLEncoder.encode(naverCallbackUrl, StandardCharsets.UTF_8)
                 + "&response_type=code"
-                + "&state=" + state;
+                + "&state=" + URLEncoder.encode(state, StandardCharsets.UTF_8);
 
         return ResponseEntity.status(HttpStatus.FOUND)
                 .header("Location", authUrl)
@@ -91,6 +160,13 @@ public class AuthController {
 
     @GetMapping("/naver/callback")
     public ResponseEntity<Void> naverCallback(@RequestParam String code, @RequestParam String state) {
+        // OAuth state 검증 (CSRF 방지)
+        if (!jwtTokenProvider.validateStateToken(state)) {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", clientUrl + "/auth/callback?error=invalid_state")
+                    .build();
+        }
+
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -136,8 +212,11 @@ public class AuthController {
             String jwt = authService.handleSocialLogin(
                     User.Provider.naver, providerId, email, name, phone, profileImage);
 
+            // JWT를 일회용 코드로 교환 (URL에 JWT 노출 방지)
+            String authCode = authCodeStore.storeCode(jwt);
+
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", clientUrl + "/auth/callback?token=" + jwt)
+                    .header("Location", clientUrl + "/auth/callback?code=" + authCode)
                     .build();
 
         } catch (Exception e) {

@@ -36,6 +36,9 @@ app:
     expiration: 604800000  # 7 days in ms
   upload:
     dir: ./uploads
+  cookie:
+    secure: false   # 운영 환경에서 true
+    domain: ""      # 운영 환경에서 도메인 설정
   client-url: http://localhost:3000
 
   # Naver OAuth
