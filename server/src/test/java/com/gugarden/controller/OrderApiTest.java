@@ -120,6 +120,7 @@ class OrderApiTest {
                 "recipientName", "홍길동",
                 "recipientPhone", "010-1111-2222",
                 "recipientAddress", "서울시 강남구",
+                "recipientZipcode", "06100",
                 "paymentMethod", "naverpay"
         );
         MvcResult createResult = mockMvc.perform(post("/api/orders")
@@ -146,6 +147,7 @@ class OrderApiTest {
                 "recipientName", "홍길동",
                 "recipientPhone", "010-1111-2222",
                 "recipientAddress", "서울시 강남구",
+                "recipientZipcode", "06100",
                 "paymentMethod", "naverpay"
         );
         MvcResult createResult = mockMvc.perform(post("/api/orders")
@@ -171,6 +173,7 @@ class OrderApiTest {
                 "recipientName", "홍길동",
                 "recipientPhone", "010-1111-2222",
                 "recipientAddress", "서울시 강남구",
+                "recipientZipcode", "06100",
                 "paymentMethod", "naverpay"
         );
         MvcResult createResult = mockMvc.perform(post("/api/orders")
