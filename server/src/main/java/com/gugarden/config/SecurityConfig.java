@@ -29,7 +29,6 @@ public class SecurityConfig {
                 // Public endpoints
                 .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers("/api/auth/naver", "/api/auth/naver/callback").permitAll()
-                .requestMatchers("/api/auth/kakao", "/api/auth/kakao/callback").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .requestMatchers("/api/rental/inquiry").permitAll()
                 .requestMatchers("/api/health").permitAll()

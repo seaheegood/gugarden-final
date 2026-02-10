@@ -31,6 +31,12 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query(value = "SELECT COUNT(*) FROM orders WHERE status = 'pending'", nativeQuery = true)
     long countPending();
 
+    @Query(value = "SELECT COUNT(*) FROM orders WHERE DATE(created_at) = CURDATE() AND status != 'cancelled'", nativeQuery = true)
+    long countTodayOrders();
+
+    @Query(value = "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE DATE(created_at) = CURDATE() AND status IN ('paid','preparing','shipped','delivered')", nativeQuery = true)
+    long sumTodayRevenue();
+
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.user ORDER BY o.createdAt DESC")
     List<Order> findTop5RecentOrders(Pageable pageable);
 

@@ -1,5 +1,6 @@
 # ===== Node (client) =====
 client/node_modules/
+client/dist/
 client/dist-ssr/
 client/npm-debug.log*
 client/yarn-debug.log*

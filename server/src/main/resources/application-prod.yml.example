@@ -37,11 +37,6 @@ app:
     client-secret: YOUR_NAVER_CLIENT_SECRET
     callback-url: https://yourdomain.com/api/auth/naver/callback
 
-  kakao:
-    client-id: YOUR_KAKAO_CLIENT_ID
-    client-secret: YOUR_KAKAO_CLIENT_SECRET
-    callback-url: https://yourdomain.com/api/auth/kakao/callback
-
   naverpay:
     client-id: YOUR_NAVERPAY_CLIENT_ID
     client-secret: YOUR_NAVERPAY_CLIENT_SECRET

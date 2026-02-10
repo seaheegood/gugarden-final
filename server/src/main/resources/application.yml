@@ -44,12 +44,6 @@ app:
     client-secret: 7EzKnLYv4h
     callback-url: http://localhost:8080/api/auth/naver/callback
 
-  # Kakao OAuth
-  kakao:
-    client-id:
-    client-secret:
-    callback-url: http://localhost:8080/api/auth/kakao/callback
-
   # NaverPay
   naverpay:
     client-id:

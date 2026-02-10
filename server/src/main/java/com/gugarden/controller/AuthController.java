@@ -147,20 +147,4 @@ public class AuthController {
         }
     }
 
-    // --- 카카오 OAuth (TODO: 카카오 설정 후 구현) ---
-
-    @GetMapping("/kakao")
-    public ResponseEntity<Void> kakaoLogin() {
-        // 카카오 client-id가 설정되지 않은 상태
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", clientUrl + "/login?error=kakao_not_configured")
-                .build();
-    }
-
-    @GetMapping("/kakao/callback")
-    public ResponseEntity<Void> kakaoCallback(@RequestParam String code) {
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", clientUrl + "/auth/callback?error=kakao_not_configured")
-                .build();
-    }
 }

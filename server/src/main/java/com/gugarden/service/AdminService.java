@@ -42,9 +42,9 @@ public class AdminService {
 
         Map<String, Object> stats = new LinkedHashMap<>();
         stats.put("totalOrders", totalOrders);
-        stats.put("todayOrders", 0); // simplified
+        stats.put("todayOrders", orderRepository.countTodayOrders());
         stats.put("totalRevenue", totalRevenue);
-        stats.put("todayRevenue", 0); // simplified
+        stats.put("todayRevenue", orderRepository.sumTodayRevenue());
         stats.put("totalUsers", totalUsers);
         stats.put("totalProducts", totalProducts);
         stats.put("pendingOrders", pendingOrders);
