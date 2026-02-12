@@ -18,6 +18,7 @@
 7. [핵심 비즈니스 로직](#7-핵심-비즈니스-로직)
 8. [프론트엔드 구조](#8-프론트엔드-구조)
 9. [실행 방법](#9-실행-방법)
+10. [배포](#10-배포)
 
 ---
 
@@ -36,13 +37,15 @@
 | | Tailwind CSS | 4.1.18 |
 | | Axios | 1.13.2 |
 | **Database** | MySQL | 8.0 |
-| **인증** | JWT (jjwt 0.12.5) | - |
-| | OAuth2 (Naver, Kakao) | - |
+| **인증** | JWT (jjwt 0.12.5) + httpOnly 쿠키 | - |
+| | OAuth2 (Naver) | - |
 | **결제** | NaverPay API, TossPay API | - |
 
 ---
 
 ## 2. 시스템 아키텍처
+
+### 개발 환경
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -72,6 +75,29 @@
                                    │  MySQL 8.0   │
                                    │  gugarden DB │
                                    └──────────────┘
+```
+
+### 운영 환경
+
+```
+사용자 ─→ https://gugarden.hongshin99.com
+              │
+     ┌────────┴────────┐
+     │  Apache2 (SSL)  │
+     │  리버스 프록시    │
+     └────────┬────────┘
+              │
+   ┌──────────┼──────────┐
+   │          │          │
+   ▼          ▼          ▼
+ dist/     :9090/api   uploads/
+(정적파일) (Spring Boot) (이미지)
+              │
+              ▼
+     ┌──────────────┐
+     │  MySQL 8.0   │
+     │ (외부 DB 서버)│
+     └──────────────┘
 ```
 
 ---
@@ -105,13 +131,15 @@ gugarden-final/
         │   ├── SecurityConfig.java   # Spring Security 설정
         │   └── WebConfig.java        # CORS + 정적 파일 서빙
         ├── security/
-        │   ├── JwtTokenProvider.java  # JWT 생성/검증
-        │   ├── JwtAuthenticationFilter.java  # 요청별 토큰 검증 필터
+        │   ├── JwtTokenProvider.java  # JWT 생성/검증 + OAuth state 토큰
+        │   ├── JwtAuthenticationFilter.java  # 쿠키 기반 토큰 검증 필터
+        │   ├── CookieUtil.java        # httpOnly 쿠키 생성/삭제
+        │   ├── AuthCodeStore.java     # OAuth 일회용 코드 저장소
         │   └── UserPrincipal.java     # 인증 주체 객체
         ├── entity/                    # JPA 엔티티 (8개)
         ├── repository/                # Spring Data JPA 인터페이스 (8개)
         ├── dto/request/               # 요청 DTO (11개)
-        ├── service/                   # 비즈니스 로직 (7개)
+        ├── service/                   # 비즈니스 로직 (8개, TokenBlacklistService 포함)
         ├── controller/                # REST 컨트롤러 (8개)
         └── exception/                 # 글로벌 예외 처리
 ```
@@ -171,9 +199,9 @@ rental_inquiries (독립 테이블)
 | PUT | `/password` | Bearer | 비밀번호 변경 |
 | DELETE | `/me` | Bearer | 회원 탈퇴 (익명화) |
 | GET | `/naver` | - | 네이버 OAuth 시작 |
-| GET | `/naver/callback` | - | 네이버 OAuth 콜백 → JWT 발급 후 리다이렉트 |
-| GET | `/kakao` | - | 카카오 OAuth 시작 |
-| GET | `/kakao/callback` | - | 카카오 OAuth 콜백 |
+| GET | `/naver/callback` | - | 네이버 OAuth 콜백 → 일회용 코드 발급 후 리다이렉트 |
+| POST | `/exchange-code` | - | 일회용 코드 → JWT 쿠키 교환 |
+| POST | `/logout` | - | 로그아웃 (쿠키 삭제) |
 
 ### 5-2. 상품 (`/api/products`)
 
@@ -253,7 +281,7 @@ rental_inquiries (독립 테이블)
 
 ## 6. 인증/인가
 
-### JWT 기반 Stateless 인증
+### JWT + httpOnly 쿠키 기반 Stateless 인증
 
 ```
 [클라이언트]                              [서버]
@@ -261,26 +289,44 @@ rental_inquiries (독립 테이블)
      │  POST /api/auth/login               │
      │  { email, password }     ──────────→ │  BCrypt 검증
      │                                      │  JWT 생성 (id, email, role)
-     │  ←────────────── { token, user }     │
+     │  ←── Set-Cookie: auth_token=JWT     │  httpOnly 쿠키로 전달
+     │      (httpOnly, Secure, SameSite)    │
      │                                      │
      │  GET /api/cart                       │
-     │  Authorization: Bearer {token} ────→ │  JwtAuthenticationFilter
-     │                                      │  → 토큰 검증
+     │  Cookie: auth_token=JWT  ──────────→ │  JwtAuthenticationFilter
+     │                                      │  → 쿠키에서 토큰 추출
+     │                                      │  → 토큰 검증 + 블랙리스트 체크
      │                                      │  → SecurityContext에 UserPrincipal 설정
      │  ←────────────── { items }           │
 ```
 
+- **토큰 저장**: httpOnly 쿠키 (`auth_token`) — XSS로 토큰 탈취 불가
 - **토큰 생성**: HMAC-SHA256 서명, 만료 7일
 - **토큰 구조**: `{ id, email, role, iat, exp }`
+- **토큰 무효화**: 비밀번호 변경, 회원 탈퇴, 역할 변경 시 블랙리스트 등록
 - **비밀번호**: BCrypt (strength 10)
 - **권한 체계**: `ROLE_USER`, `ROLE_ADMIN`
 
-### 소셜 로그인 (OAuth2)
+### 소셜 로그인 (OAuth2 — 네이버)
 
 ```
-[사용자] → [네이버/카카오 로그인] → [OAuth Callback] → [JWT 발급] → [프론트 리다이렉트]
+[사용자] → [GET /api/auth/naver]
+              → 서명된 state 토큰 생성 (CSRF 방지, 5분 만료)
+              → 네이버 인증 페이지로 리다이렉트
+         → [네이버 로그인/동의]
+         → [GET /api/auth/naver/callback]
+              → state 토큰 검증 (CSRF 방지)
+              → 네이버 API로 사용자 정보 조회
+              → 계정 생성 또는 연동
+              → JWT를 일회용 코드로 변환
+              → 클라이언트로 리다이렉트 (?code=xxx)
+         → [POST /api/auth/exchange-code]
+              → 일회용 코드 → JWT 교환
+              → httpOnly 쿠키로 JWT 설정
 ```
 
+- **CSRF 방지**: OAuth state 파라미터를 서명된 JWT로 검증
+- **토큰 노출 방지**: URL에 JWT 대신 일회용 코드 사용 후 교환
 - 기존 이메일과 동일하면 계정 연동 (provider 업데이트)
 - 새 사용자면 자동 회원가입
 
@@ -412,14 +458,14 @@ pending → paid → preparing → shipped → delivered
 { user, loading, isAuthenticated, isAdmin,
   login, register, logout, updateUser, socialLogin }
 
-// 토큰 저장: localStorage
-// 401 응답 시: 토큰 삭제 + /login 리다이렉트 (Axios 인터셉터)
+// 인증: httpOnly 쿠키 (브라우저가 자동 전송, JS 접근 불가)
+// 401 응답 시: /login 리다이렉트 (Axios 인터셉터)
 ```
 
 ### API 통신 (Axios)
 
-- Base URL: `/api` (Vite 프록시로 8080 포워딩)
-- 요청 인터셉터: `Authorization: Bearer {token}` 자동 주입
+- Base URL: `/api` (개발: Vite 프록시 → 8080 / 운영: Apache 프록시 → 9090)
+- `withCredentials: true` — 쿠키 자동 포함
 - 응답 인터셉터: 401 발생 시 로그아웃 처리
 - FormData 전송 시 Content-Type 자동 처리
 
@@ -455,4 +501,23 @@ npm run dev
 ```sql
 -- server/src/main/resources/schema.sql 실행
 -- 기본 카테고리 3개 자동 생성: terrarium, vivarium, kit
+```
+
+---
+
+## 10. 배포
+
+운영 사이트: **https://gugarden.hongshin99.com**
+
+자세한 배포 가이드는 [DEPLOY.md](./DEPLOY.md)를 참고하세요.
+
+### 빠른 업데이트 배포
+
+```bash
+ssh root@<서버IP>
+cd /var/www/gugarden/repo
+git pull origin main
+cd client && npm ci && npm run build
+cd ../server && ./gradlew clean build -x test --no-daemon
+systemctl restart gugarden
 ```
