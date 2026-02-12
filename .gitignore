@@ -11,6 +11,7 @@ server/.gradle/
 server/build/
 *.class
 *.jar
+!server/gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
 
