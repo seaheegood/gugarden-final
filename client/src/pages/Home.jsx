@@ -163,7 +163,7 @@ function Home() {
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/kit_main.jpeg)",
+                  backgroundImage: "url(/images/terrarium_main.jpeg)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
@@ -199,7 +199,7 @@ function Home() {
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/terrarium_main.jpeg)",
+                  backgroundImage: "url(/images/paludarium_main.jpeg)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",

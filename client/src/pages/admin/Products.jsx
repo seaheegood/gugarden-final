@@ -90,7 +90,7 @@ function Products() {
     if (product) {
       setEditingProduct(product)
       setFormData({
-        categoryId: product.category_id,
+        categoryId: String(product.category_id),
         name: product.name,
         description: product.description || '',
         price: product.price,
@@ -106,7 +106,7 @@ function Products() {
     } else {
       setEditingProduct(null)
       setFormData({
-        categoryId: categories[0]?.id || '',
+        categoryId: categories[0]?.id ? String(categories[0].id) : '',
         name: '',
         description: '',
         price: '',
@@ -264,6 +264,7 @@ function Products() {
 
       closeModal()
       fetchProducts()
+      fetchCategories()
     } catch (error) {
       alert(error.response?.data?.error || '저장에 실패했습니다.')
     }
@@ -568,7 +569,7 @@ function Products() {
                 >
                   <option value="">선택하세요</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
+                    <option key={cat.id} value={String(cat.id)}>
                       {cat.name}
                     </option>
                   ))}
