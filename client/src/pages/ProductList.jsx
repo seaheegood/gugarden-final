@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import api from '../api'
+import ScrollIndicator from '../components/ScrollIndicator'
 
 const categoryInfo = {
   terrarium: {
     title: 'TERRARIUM',
     subtitle: '밀폐된 유리 안의 작은 생태계',
     description: '테라리움은 밀폐된 유리 용기 안에서 자체적인 생태계를 형성하는 작은 정원입니다. 최소한의 관리로 자연의 아름다움을 오래도록 즐길 수 있습니다.',
-    image: '/images/terrarium_main.jpeg',
+    image: '/images/kit_main.jpeg',
   },
   vivarium: {
     title: 'VIVARIUM',
@@ -15,11 +16,17 @@ const categoryInfo = {
     description: '비바리움은 식물과 동물이 함께 어우러진 살아있는 생태 공간입니다. 열대 우림부터 사막까지, 다양한 자연 환경을 재현합니다.',
     image: '/images/vivarium_main.jpeg',
   },
-  kit: {
-    title: 'KIT',
-    subtitle: '직접 만드는 나만의 정원',
-    description: '필요한 모든 재료가 포함된 DIY 키트로, 나만의 테라리움을 직접 만들어보세요. 상세한 설명서가 함께 제공됩니다.',
-    image: '/images/kit_main.jpeg',
+  paludarium: {
+    title: 'PALUDARIUM',
+    subtitle: '육지와 수중이 만나는 자연',
+    description: '팔루다리움은 육지와 수중 환경이 결합된 독특한 생태계입니다. 물과 땅이 어우러진 자연의 조화를 경험할 수 있습니다.',
+    image: '/images/terrarium_main.jpeg',
+  },
+  elements: {
+    title: 'ELEMENTS',
+    subtitle: '테라리움을 구성하는 재료와 소품',
+    description: '테라리움 제작에 필요한 다양한 재료와 소품을 만나보세요. 용기, 식물, 토양, 장식 등 모든 구성 요소를 갖추고 있습니다.',
+    image: null,
   },
 }
 
@@ -30,6 +37,7 @@ function ProductList() {
   const [sortBy, setSortBy] = useState('newest')
   const [loading, setLoading] = useState(true)
 
+  const contentRef = useRef(null)
   const info = categoryInfo[category] || categoryInfo.terrarium
 
   useEffect(() => {
@@ -66,41 +74,55 @@ function ProductList() {
 
   return (
     <div style={{ background: '#000', minHeight: '100vh' }}>
-      {/* 히어로 섹션 */}
-      <section className="hero-section" style={{
-        height: '80vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundImage: `url(${info.image})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        position: 'relative',
-      }}>
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.4)',
-          }}
-        />
-        <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 20px' }}>
-          <h1 className="hero-title" style={{ fontWeight: 200, letterSpacing: '0.3em', marginBottom: '16px', color: '#fff' }}>
+      {/* 히어로 섹션 - 이미지가 있는 카테고리만 표시 */}
+      {info.image ? (
+        <>
+          <section className="hero-section" style={{
+            height: '80vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundImage: `url(${info.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+          }}>
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(0, 0, 0, 0.4)',
+              }}
+            />
+            <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 20px' }}>
+              <h1 className="hero-title" style={{ fontWeight: 200, letterSpacing: '0.3em', marginBottom: '16px', color: '#fff' }}>
+                {info.title}
+              </h1>
+              <p style={{ color: '#ccc', letterSpacing: '0.1em' }}>{info.subtitle}</p>
+            </div>
+            <ScrollIndicator onClick={() => contentRef.current?.scrollIntoView({ behavior: 'smooth' })} />
+          </section>
+
+          {/* 소개 */}
+          <section ref={contentRef} className="responsive-section" style={{ borderBottom: '1px solid #222' }}>
+            <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+              <p style={{ color: '#888', lineHeight: 1.8 }}>{info.description}</p>
+            </div>
+          </section>
+        </>
+      ) : (
+        /* 히어로 이미지 없는 카테고리 - 타이틀만 표시 */
+        <section style={{ paddingTop: '140px', paddingBottom: '48px', textAlign: 'center', borderBottom: '1px solid #222' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: 200, letterSpacing: '0.3em', marginBottom: '16px', color: '#fff' }}>
             {info.title}
           </h1>
-          <p style={{ color: '#ccc', letterSpacing: '0.1em' }}>{info.subtitle}</p>
-        </div>
-      </section>
-
-      {/* 소개 */}
-      <section className="responsive-section" style={{ borderBottom: '1px solid #222' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ color: '#888', lineHeight: 1.8 }}>{info.description}</p>
-        </div>
-      </section>
+          <p style={{ color: '#888', letterSpacing: '0.1em', marginBottom: '24px' }}>{info.subtitle}</p>
+          <p style={{ color: '#666', lineHeight: 1.8, maxWidth: '800px', margin: '0 auto', padding: '0 20px' }}>{info.description}</p>
+        </section>
+      )}
 
       {/* 상품 목록 */}
       <section className="responsive-section">

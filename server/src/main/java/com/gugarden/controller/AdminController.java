@@ -73,9 +73,10 @@ public class AdminController {
             @RequestParam(required = false) String thumbnail,
             @RequestParam(required = false) Boolean isActive,
             @RequestParam(required = false) Boolean isFeatured,
+            @RequestParam(required = false) Boolean isRentable,
             @RequestParam(required = false) MultipartFile thumbnailFile) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(adminService.createProduct(categoryId, name, description, price, salePrice, stock, thumbnail, isActive, isFeatured, thumbnailFile));
+                .body(adminService.createProduct(categoryId, name, description, price, salePrice, stock, thumbnail, isActive, isFeatured, isRentable, thumbnailFile));
     }
 
     @PutMapping("/products/{id}")
@@ -90,8 +91,9 @@ public class AdminController {
             @RequestParam(required = false) String thumbnail,
             @RequestParam(required = false) Boolean isActive,
             @RequestParam(required = false) Boolean isFeatured,
+            @RequestParam(required = false) Boolean isRentable,
             @RequestParam(required = false) MultipartFile thumbnailFile) {
-        return ResponseEntity.ok(adminService.updateProduct(id, categoryId, name, description, price, salePrice, stock, thumbnail, isActive, isFeatured, thumbnailFile));
+        return ResponseEntity.ok(adminService.updateProduct(id, categoryId, name, description, price, salePrice, stock, thumbnail, isActive, isFeatured, isRentable, thumbnailFile));
     }
 
     @DeleteMapping("/products/{id}")

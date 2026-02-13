@@ -30,9 +30,9 @@ class RentalInquiryApiTest {
                 "name", "테스트고객",
                 "email", "rental@test.com",
                 "phone", "010-5555-6666",
-                "company", "테스트회사",
-                "location", "서울시 서초구",
-                "spaceSize", "100평",
+                "workName", "Rental Work 1",
+                "rentalPeriod", "3개월",
+                "purpose", "카페 인테리어",
                 "message", "렌탈 문의 드립니다."
         );
 
@@ -49,7 +49,7 @@ class RentalInquiryApiTest {
     void submitInquiry_missingRequired() throws Exception {
         // name, email, phone 누락
         Map<String, String> request = Map.of(
-                "company", "테스트회사"
+                "workName", "Rental Work 1"
         );
 
         mockMvc.perform(post("/api/rental/inquiry")

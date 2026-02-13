@@ -17,10 +17,8 @@ public class RentalInquiryRequest {
     @NotBlank(message = "연락처를 입력해주세요.")
     private String phone;
 
-    private String company;
-    private String location;
-    private String spaceSize;
-
-    @NotBlank(message = "문의 내용을 입력해주세요.")
+    private String workName;
+    private String rentalPeriod;
+    private String purpose;
     private String message;
 }

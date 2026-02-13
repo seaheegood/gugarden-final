@@ -32,6 +32,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.getFeaturedProducts());
     }
 
+    @GetMapping("/rentable")
+    public ResponseEntity<Map<String, Object>> getRentable() {
+        return ResponseEntity.ok(productService.getRentableProducts());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getDetail(@PathVariable Integer id) {
         return ResponseEntity.ok(productService.getProductDetail(id));

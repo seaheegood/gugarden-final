@@ -74,8 +74,13 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/kit" style={{ fontSize: "14px", color: "#888" }}>
-                  Kit
+                <Link to="/paludarium" style={{ fontSize: "14px", color: "#888" }}>
+                  Paludarium
+                </Link>
+              </li>
+              <li>
+                <Link to="/elements" style={{ fontSize: "14px", color: "#888" }}>
+                  Elements
                 </Link>
               </li>
               <li>

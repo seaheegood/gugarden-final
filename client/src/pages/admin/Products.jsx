@@ -19,6 +19,7 @@ function Products() {
     thumbnail: '',
     isActive: true,
     isFeatured: false,
+    isRentable: false,
   })
 
   // 이미지 업로드 관련 상태
@@ -98,6 +99,7 @@ function Products() {
         thumbnail: product.thumbnail || '',
         isActive: product.is_active,
         isFeatured: product.is_featured,
+        isRentable: product.is_rentable || false,
       })
       setThumbnailPreview(product.thumbnail || '')
       await fetchProductImages(product.id)
@@ -113,6 +115,7 @@ function Products() {
         thumbnail: '',
         isActive: true,
         isFeatured: false,
+        isRentable: false,
       })
       setThumbnailPreview('')
       setProductImages([])
@@ -243,6 +246,7 @@ function Products() {
       submitData.append('stock', parseInt(formData.stock) || 0)
       submitData.append('isActive', formData.isActive)
       submitData.append('isFeatured', formData.isFeatured)
+      submitData.append('isRentable', formData.isRentable)
 
       if (thumbnailFile) {
         submitData.append('thumbnailFile', thumbnailFile)
@@ -381,6 +385,9 @@ function Products() {
                         <p className="text-sm font-medium text-gray-800 mb-1">{product.name}</p>
                         {product.is_featured && (
                           <span className="text-xs text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">추천</span>
+                        )}
+                        {product.is_rentable && (
+                          <span className="text-xs text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200 ml-1">렌탈</span>
                         )}
                       </td>
                       <td className="px-5 py-3 text-sm text-gray-600">
@@ -760,6 +767,17 @@ function Products() {
                     className="w-4 h-4 rounded border-gray-400 text-gray-900 focus:ring-gray-500"
                   />
                   <span className="text-sm font-medium text-gray-700">추천 상품</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="isRentable"
+                    checked={formData.isRentable}
+                    onChange={handleChange}
+                    className="w-4 h-4 rounded border-gray-400 text-gray-900 focus:ring-gray-500"
+                  />
+                  <span className="text-sm font-medium text-gray-700">렌트 가능</span>
                 </label>
               </div>
 

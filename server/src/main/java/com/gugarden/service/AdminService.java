@@ -208,6 +208,7 @@ public class AdminService {
             map.put("thumbnail", p.getThumbnail());
             map.put("is_active", p.getIsActive());
             map.put("is_featured", p.getIsFeatured());
+            map.put("is_rentable", p.getIsRentable());
             map.put("created_at", p.getCreatedAt());
             map.put("updated_at", p.getUpdatedAt());
             map.put("category_name", p.getCategory().getName());
@@ -231,7 +232,7 @@ public class AdminService {
     public Map<String, Object> createProduct(Integer categoryId, String name, String description,
                                               Integer price, Integer salePrice, Integer stock,
                                               String thumbnail, Boolean isActive, Boolean isFeatured,
-                                              MultipartFile thumbnailFile) {
+                                              Boolean isRentable, MultipartFile thumbnailFile) {
         if (categoryId == null || name == null || price == null) {
             throw new BadRequestException("필수 정보를 입력해주세요.");
         }
@@ -258,6 +259,7 @@ public class AdminService {
                 .thumbnail(thumbnailPath)
                 .isActive(isActive != null ? isActive : true)
                 .isFeatured(isFeatured != null ? isFeatured : false)
+                .isRentable(isRentable != null ? isRentable : false)
                 .build();
 
         productRepository.save(product);
@@ -273,7 +275,7 @@ public class AdminService {
     public Map<String, Object> updateProduct(Integer id, Integer categoryId, String name, String description,
                                               Integer price, Integer salePrice, Integer stock,
                                               String thumbnail, Boolean isActive, Boolean isFeatured,
-                                              MultipartFile thumbnailFile) {
+                                              Boolean isRentable, MultipartFile thumbnailFile) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 
@@ -289,6 +291,7 @@ public class AdminService {
         if (stock != null) product.setStock(stock);
         if (isActive != null) product.setIsActive(isActive);
         if (isFeatured != null) product.setIsFeatured(isFeatured);
+        if (isRentable != null) product.setIsRentable(isRentable);
 
         String thumbnailPath;
         if (thumbnailFile != null && !thumbnailFile.isEmpty()) {
@@ -562,9 +565,9 @@ public class AdminService {
         map.put("name", inquiry.getName());
         map.put("email", inquiry.getEmail());
         map.put("phone", inquiry.getPhone());
-        map.put("company", inquiry.getCompany());
-        map.put("location", inquiry.getLocation());
-        map.put("space_size", inquiry.getSpaceSize());
+        map.put("work_name", inquiry.getWorkName());
+        map.put("rental_period", inquiry.getRentalPeriod());
+        map.put("purpose", inquiry.getPurpose());
         map.put("message", inquiry.getMessage());
         map.put("status", inquiry.getStatus());
         map.put("created_at", inquiry.getCreatedAt());

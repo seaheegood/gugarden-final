@@ -35,7 +35,8 @@ CREATE TABLE categories (
 INSERT INTO categories (name, slug, description) VALUES
 ('테라리움', 'terrarium', '밀폐형 유리 용기 안에 조성된 작은 생태계'),
 ('비바리움', 'vivarium', '살아있는 동물과 식물이 함께하는 생태 공간'),
-('키트', 'kit', '직접 만들 수 있는 DIY 테라리움 키트');
+('팔루다리움', 'paludarium', '육지와 수중 환경이 결합된 자연 생태계'),
+('엘리먼츠', 'elements', '테라리움을 구성하는 재료와 소품');
 
 -- 상품 테이블
 CREATE TABLE products (
@@ -50,6 +51,7 @@ CREATE TABLE products (
     thumbnail VARCHAR(500),
     is_active BOOLEAN DEFAULT TRUE,
     is_featured BOOLEAN DEFAULT FALSE,
+    is_rentable BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories(id)
@@ -119,9 +121,9 @@ CREATE TABLE rental_inquiries (
     name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
-    company VARCHAR(255),
-    location VARCHAR(255),
-    space_size VARCHAR(100),
+    work_name VARCHAR(255),
+    rental_period VARCHAR(255),
+    purpose VARCHAR(255),
     message TEXT,
     status ENUM('new', 'contacted', 'completed') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

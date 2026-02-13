@@ -28,12 +28,13 @@ public class RentalInquiry {
     @Column(nullable = false, length = 20)
     private String phone;
 
-    private String company;
+    @Column(name = "work_name")
+    private String workName;
 
-    private String location;
+    @Column(name = "rental_period")
+    private String rentalPeriod;
 
-    @Column(name = "space_size", length = 100)
-    private String spaceSize;
+    private String purpose;
 
     @Column(columnDefinition = "TEXT")
     private String message;

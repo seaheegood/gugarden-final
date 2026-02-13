@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
 import useScrollAnimation from "../hooks/useScrollAnimation";
+import ScrollIndicator from "../components/ScrollIndicator";
 
 function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  const collectionRef = useRef(null);
+
+  const scrollToCollection = () => {
+    collectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   // 스크롤 애니메이션 refs
   const introRef = useScrollAnimation();
@@ -81,8 +88,8 @@ function Home() {
           <p className="hero-animate-delay-2" style={{ color: "#ddd", marginBottom: "48px" }}>
             자연을 담은 작은 정원
           </p>
-          <Link
-            to="/terrarium"
+          <button
+            onClick={scrollToCollection}
             className="btn-hover hero-animate-delay-3"
             style={{
               border: "1px solid #fff",
@@ -90,15 +97,19 @@ function Home() {
               fontSize: "12px",
               letterSpacing: "0.2em",
               color: "#fff",
+              background: "transparent",
+              cursor: "pointer",
             }}
           >
             EXPLORE
-          </Link>
+          </button>
         </div>
+
+        <ScrollIndicator onClick={scrollToCollection} />
       </section>
 
       {/* 소개 */}
-      <section className="responsive-section" style={{ background: "#000" }}>
+      <section ref={collectionRef} className="responsive-section" style={{ background: "#000" }}>
         <div
           ref={introRef}
           className="animate-on-scroll animate-fade-only"
@@ -145,14 +156,14 @@ function Home() {
 
           <div
             ref={categoryRef}
-            className="grid-3 animate-on-scroll"
+            className="grid-4 animate-on-scroll"
           >
             <Link to="/terrarium" className="category-card delay-1" style={{ display: "block" }}>
               <div
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/terrarium_main.jpeg)",
+                  backgroundImage: "url(/images/kit_main.jpeg)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
@@ -183,20 +194,42 @@ function Home() {
                 살아있는 자연을 담은 공간
               </p>
             </Link>
-            <Link to="/kit" className="category-card delay-3" style={{ display: "block" }}>
+            <Link to="/paludarium" className="category-card delay-3" style={{ display: "block" }}>
               <div
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/kit_main.jpeg)",
+                  backgroundImage: "url(/images/terrarium_main.jpeg)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
                 }}
               />
-              <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>Kit</h3>
+              <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>
+                Paludarium
+              </h3>
               <p style={{ fontSize: "14px", color: "#aaa" }}>
-                직접 만드는 나만의 정원
+                육지와 수중이 만나는 자연
+              </p>
+            </Link>
+            <Link to="/elements" className="category-card delay-4" style={{ display: "block" }}>
+              <div
+                style={{
+                  aspectRatio: "4/3",
+                  background: "#1a1a1a",
+                  marginBottom: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span style={{ fontSize: "14px", color: "#666", letterSpacing: "0.2em" }}>ELEMENTS</span>
+              </div>
+              <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>
+                Elements
+              </h3>
+              <p style={{ fontSize: "14px", color: "#aaa" }}>
+                테라리움을 구성하는 재료와 소품
               </p>
             </Link>
           </div>
