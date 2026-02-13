@@ -214,17 +214,15 @@ function Home() {
             </Link>
             <Link to="/elements" className="category-card delay-4" style={{ display: "block" }}>
               <div
+                className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  background: "#1a1a1a",
+                  backgroundImage: "url(/images/elements_main.jpeg)",
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
                   marginBottom: "16px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
                 }}
-              >
-                <span style={{ fontSize: "14px", color: "#666", letterSpacing: "0.2em" }}>ELEMENTS</span>
-              </div>
+              />
               <h3 style={{ fontSize: "16px", fontWeight: 400, marginBottom: "8px" }}>
                 Elements
               </h3>

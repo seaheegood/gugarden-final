@@ -26,7 +26,7 @@ const categoryInfo = {
     title: 'ELEMENTS',
     subtitle: '테라리움을 구성하는 재료와 소품',
     description: '테라리움 제작에 필요한 다양한 재료와 소품을 만나보세요. 용기, 식물, 토양, 장식 등 모든 구성 요소를 갖추고 있습니다.',
-    image: null,
+    image: '/images/elements_main.jpeg',
   },
 }
 
