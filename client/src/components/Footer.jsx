@@ -28,12 +28,7 @@ function Footer() {
             borderBottom: "1px solid #222",
           }}
         >
-          <Link to="/terrarium" style={{ fontSize: "13px", color: "#999" }}>Terrarium</Link>
-          <Link to="/vivarium" style={{ fontSize: "13px", color: "#999" }}>Vivarium</Link>
-          <Link to="/paludarium" style={{ fontSize: "13px", color: "#999" }}>Paludarium</Link>
-          <Link to="/elements" style={{ fontSize: "13px", color: "#999" }}>Elements</Link>
-          <Link to="/rental" style={{ fontSize: "13px", color: "#999" }}>Rental</Link>
-          <Link to="/ando" style={{ fontSize: "13px", color: "#999" }}>Ando</Link>
+          <h1>구매 전 인스타그램 DM or 전화로 문의 부탁드립니다 :)</h1>
         </div>
 
         {/* 사업자 정보 + 고객센터 + 결제정보 */}
