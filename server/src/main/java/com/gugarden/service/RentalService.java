@@ -27,9 +27,9 @@ public class RentalService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .phone(request.getPhone())
-                .company(request.getCompany())
-                .location(request.getLocation())
-                .spaceSize(request.getSpaceSize())
+                .workName(request.getWorkName())
+                .rentalPeriod(request.getRentalPeriod())
+                .purpose(request.getPurpose())
                 .message(request.getMessage())
                 .build();
 

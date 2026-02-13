@@ -1,18 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../api'
+import ScrollIndicator from '../components/ScrollIndicator'
 
 function Rental() {
+  const navigate = useNavigate()
+  const contentRef = useRef(null)
+  const [rentableProducts, setRentableProducts] = useState([])
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    company: '',
-    location: '',
-    spaceSize: '',
+    workName: '',
+    rentalPeriod: '',
+    purpose: '',
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    const fetchRentableProducts = async () => {
+      try {
+        const response = await api.get('/products/rentable')
+        setRentableProducts(response.data.products || [])
+      } catch (error) {
+        console.error('렌트 가능 상품 조회 에러:', error)
+      }
+    }
+    fetchRentableProducts()
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -33,20 +50,6 @@ function Rental() {
       setIsSubmitting(false)
     }
   }
-
-  const services = [
-    { title: '드라마 & 영화 소품', description: '작품의 분위기를 살리는 자연스러운 소품으로 장면에 생동감을 더합니다.', icon: '🎬' },
-    { title: '카페 & 레스토랑', description: '고객에게 특별한 분위기를 선사하고 공간의 품격을 높입니다.', icon: '☕' },
-    { title: '매장 & 쇼룸', description: '브랜드의 가치를 자연과 함께 표현하여 고객 경험을 향상시킵니다.', icon: '🏪' },
-    { title: '소품샵 입점', description: '감각적인 소품샵에 테라리움을 입점하여 새로운 고객층을 만나보세요.', icon: '🌿' },
-  ]
-
-  const process = [
-    { step: '01', title: '상담 문의', description: '원하시는 공간과 스타일에 대해 상담합니다.' },
-    { step: '02', title: '현장 방문', description: '공간을 직접 방문하여 환경을 분석합니다.' },
-    { step: '03', title: '맞춤 제안', description: '공간에 최적화된 테라리움을 제안합니다.' },
-    { step: '04', title: '설치 & 관리', description: '설치 후 정기적인 관리 서비스를 제공합니다.' },
-  ]
 
   const inputStyle = { width: '100%', background: 'transparent', border: '1px solid #333', padding: '12px 16px', fontSize: '14px', color: '#fff' }
 
@@ -78,61 +81,80 @@ function Rental() {
           <h1 className="hero-title" style={{ fontWeight: 200, letterSpacing: '0.2em', marginBottom: '24px', color: '#fff' }}>RENTAL SERVICE</h1>
           <p style={{ color: '#ccc' }}>공간에 자연을 더하는 테라리움 렌탈 서비스</p>
         </div>
+        <ScrollIndicator onClick={() => contentRef.current?.scrollIntoView({ behavior: 'smooth' })} />
       </section>
 
-      {/* 소개 섹션 */}
-      <section className="responsive-section">
-        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 className="section-title-large" style={{ fontWeight: 200, marginBottom: '32px', lineHeight: 1.6 }}>
-            비즈니스 공간에<br />자연의 감성을 더합니다
-          </h2>
-          <p style={{ color: '#888', lineHeight: 1.8 }}>
-            구의정원의 렌탈 서비스는 기업, 카페, 매장 등 다양한 비즈니스 공간에
-            맞춤형 테라리움을 제공합니다. 설치부터 정기 관리까지 전문가가 직접 케어합니다.
-          </p>
-        </div>
-      </section>
-
-      {/* 서비스 대상 */}
-      <section className="responsive-section" style={{ background: '#0a0a0a' }}>
-        <div className="responsive-container">
-          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <p style={{ fontSize: '12px', letterSpacing: '0.4em', color: '#888', marginBottom: '16px' }}>SERVICE FOR</p>
-            <h2 className="section-title" style={{ fontWeight: 200, letterSpacing: '0.15em' }}>이런 공간에 추천합니다</h2>
+      {/* 렌트 가능 상품 갤러리 */}
+      {rentableProducts.length > 0 && (
+        <section ref={contentRef} className="responsive-section">
+          <div className="responsive-container">
+            <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+              <p style={{ fontSize: '12px', letterSpacing: '0.4em', color: '#888', marginBottom: '16px' }}>AVAILABLE WORKS</p>
+              <h2 className="section-title" style={{ fontWeight: 200, letterSpacing: '0.15em' }}>Rental Works</h2>
+            </div>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+              gap: '32px',
+            }}>
+              {rentableProducts.map((product, index) => (
+                <div
+                  key={product.id}
+                  onClick={() => navigate(`/product/${product.id}`)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div style={{
+                    aspectRatio: '1',
+                    overflow: 'hidden',
+                    marginBottom: '16px',
+                    border: '1px solid #222',
+                  }}>
+                    {product.thumbnail ? (
+                      <img
+                        src={product.thumbnail}
+                        alt={`Rental Work ${index + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.5s ease',
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                        onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      />
+                    ) : (
+                      <div style={{
+                        width: '100%',
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: '#111',
+                        color: '#555',
+                        fontSize: '14px',
+                      }}>
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <p style={{
+                    fontSize: '14px',
+                    fontWeight: 300,
+                    letterSpacing: '0.15em',
+                    color: '#ccc',
+                    textAlign: 'center',
+                  }}>
+                    Rental Work {index + 1}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid-4">
-            {services.map((service, index) => (
-              <div key={index} style={{ padding: '32px', border: '1px solid #333' }}>
-                <div style={{ fontSize: '32px', marginBottom: '24px' }}>{service.icon}</div>
-                <h3 style={{ fontSize: '18px', fontWeight: 300, letterSpacing: '0.1em', marginBottom: '16px' }}>{service.title}</h3>
-                <p style={{ fontSize: '14px', color: '#888', lineHeight: 1.6 }}>{service.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 프로세스 */}
-      <section className="responsive-section">
-        <div className="responsive-container">
-          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-            <p style={{ fontSize: '12px', letterSpacing: '0.4em', color: '#888', marginBottom: '16px' }}>PROCESS</p>
-            <h2 className="section-title" style={{ fontWeight: 200, letterSpacing: '0.15em' }}>렌탈 진행 과정</h2>
-          </div>
-          <div className="grid-4">
-            {process.map((item, index) => (
-              <div key={index} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '32px', fontWeight: 200, color: '#666', marginBottom: '16px' }}>{item.step}</div>
-                <h3 style={{ fontSize: '18px', fontWeight: 300, marginBottom: '12px' }}>{item.title}</h3>
-                <p style={{ fontSize: '14px', color: '#888', lineHeight: 1.6 }}>{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 문의 폼 */}
-      <section className="responsive-section" style={{ background: '#0a0a0a' }}>
+      <section ref={rentableProducts.length === 0 ? contentRef : undefined} className="responsive-section" style={{ background: '#0a0a0a' }}>
         <div style={{ maxWidth: '600px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
             <p style={{ fontSize: '12px', letterSpacing: '0.4em', color: '#888', marginBottom: '16px' }}>INQUIRY</p>
@@ -152,28 +174,28 @@ function Rental() {
                   <input type="text" name="name" value={formData.name} onChange={handleChange} required style={inputStyle} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>회사명</label>
-                  <input type="text" name="company" value={formData.company} onChange={handleChange} style={inputStyle} />
-                </div>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-                <div>
                   <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>이메일 *</label>
                   <input type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} />
                 </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>연락처 *</label>
                   <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={inputStyle} />
                 </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>작품명(번호)</label>
+                  <input type="text" name="workName" value={formData.workName} onChange={handleChange} placeholder="예: Rental Work 1" style={inputStyle} />
+                </div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>설치 위치</label>
-                  <input type="text" name="location" value={formData.location} onChange={handleChange} placeholder="예: 서울시 강남구" style={inputStyle} />
+                  <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>렌탈 기간</label>
+                  <input type="text" name="rentalPeriod" value={formData.rentalPeriod} onChange={handleChange} placeholder="예: 3개월" style={inputStyle} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>공간 규모</label>
-                  <input type="text" name="spaceSize" value={formData.spaceSize} onChange={handleChange} placeholder="예: 약 30평" style={inputStyle} />
+                  <label style={{ display: 'block', fontSize: '12px', color: '#888', marginBottom: '8px' }}>용도</label>
+                  <input type="text" name="purpose" value={formData.purpose} onChange={handleChange} placeholder="예: 카페 인테리어" style={inputStyle} />
                 </div>
               </div>
               <div>
@@ -183,7 +205,7 @@ function Rental() {
                   value={formData.message}
                   onChange={handleChange}
                   rows={5}
-                  placeholder="원하시는 스타일이나 궁금한 점을 자유롭게 작성해주세요."
+                  placeholder="궁금한 점을 자유롭게 작성해주세요."
                   style={{ ...inputStyle, resize: 'none' }}
                 />
               </div>

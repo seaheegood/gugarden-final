@@ -1,4 +1,8 @@
+import { useRef } from 'react'
+import ScrollIndicator from '../components/ScrollIndicator'
+
 function Ando() {
+  const contentRef = useRef(null)
   const classes = [
     {
       title: "데일리 테라리움 클래스 (소)",
@@ -107,10 +111,11 @@ function Ando() {
           </h1>
           <p style={{ color: "#ccc" }}>구의정원 작가의 작업실</p>
         </div>
+        <ScrollIndicator onClick={() => contentRef.current?.scrollIntoView({ behavior: 'smooth' })} />
       </section>
 
       {/* 소개 섹션 */}
-      <section className="responsive-section">
+      <section ref={contentRef} className="responsive-section">
         <div
           style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}
         >

@@ -22,6 +22,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT p FROM Product p JOIN FETCH p.category WHERE p.isFeatured = true AND p.isActive = true ORDER BY p.createdAt DESC")
     List<Product> findFeatured();
 
+    @Query("SELECT p FROM Product p JOIN FETCH p.category WHERE p.isRentable = true AND p.isActive = true ORDER BY p.createdAt ASC")
+    List<Product> findRentable();
+
     @Query("SELECT p FROM Product p JOIN FETCH p.category WHERE p.id = :id AND p.isActive = true")
     Optional<Product> findByIdAndActive(@Param("id") Integer id);
 

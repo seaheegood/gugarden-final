@@ -64,7 +64,8 @@ function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="terrarium" element={<ProductList />} />
         <Route path="vivarium" element={<ProductList />} />
-        <Route path="kit" element={<ProductList />} />
+        <Route path="paludarium" element={<ProductList />} />
+        <Route path="elements" element={<ProductList />} />
         <Route path="product/:id" element={<ProductDetail />} />
         <Route path="rental" element={<Rental />} />
         <Route path="ando" element={<Ando />} />

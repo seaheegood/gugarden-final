@@ -152,9 +152,9 @@ function RentalInquiries() {
                 <tr className="border-b border-gray-200 text-left bg-gray-50">
                   <th className="px-5 py-3 text-xs font-semibold text-gray-600">문의일시</th>
                   <th className="px-5 py-3 text-xs font-semibold text-gray-600">이름</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-600">회사명</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-gray-600">작품명</th>
                   <th className="px-5 py-3 text-xs font-semibold text-gray-600">연락처</th>
-                  <th className="px-5 py-3 text-xs font-semibold text-gray-600">위치</th>
+                  <th className="px-5 py-3 text-xs font-semibold text-gray-600">용도</th>
                   <th className="px-5 py-3 text-xs font-semibold text-gray-600">상태</th>
                   <th className="px-5 py-3 text-xs font-semibold text-gray-600">관리</th>
                 </tr>
@@ -173,11 +173,11 @@ function RentalInquiries() {
                         {inquiry.name}
                       </td>
                       <td className="px-5 py-3 text-sm text-gray-600">
-                        {inquiry.company || '-'}
+                        {inquiry.work_name || '-'}
                       </td>
                       <td className="px-5 py-3 text-sm text-gray-600">{inquiry.phone}</td>
                       <td className="px-5 py-3 text-sm text-gray-600">
-                        {inquiry.location || '-'}
+                        {inquiry.purpose || '-'}
                       </td>
                       <td className="px-5 py-3">
                         <span
@@ -271,10 +271,10 @@ function RentalInquiries() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">
-                    회사명
+                    작품명(번호)
                   </label>
                   <p className="text-sm text-gray-800">
-                    {selectedInquiry.company || '-'}
+                    {selectedInquiry.work_name || '-'}
                   </p>
                 </div>
               </div>
@@ -297,18 +297,18 @@ function RentalInquiries() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">
-                    설치 위치
+                    렌탈 기간
                   </label>
                   <p className="text-sm text-gray-800">
-                    {selectedInquiry.location || '-'}
+                    {selectedInquiry.rental_period || '-'}
                   </p>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">
-                    공간 규모
+                    용도
                   </label>
                   <p className="text-sm text-gray-800">
-                    {selectedInquiry.space_size || '-'}
+                    {selectedInquiry.purpose || '-'}
                   </p>
                 </div>
               </div>

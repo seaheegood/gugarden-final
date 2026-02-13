@@ -54,6 +54,10 @@ public class Product {
     @Builder.Default
     private Boolean isFeatured = false;
 
+    @Column(name = "is_rentable")
+    @Builder.Default
+    private Boolean isRentable = false;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

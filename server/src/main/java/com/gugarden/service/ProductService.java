@@ -43,6 +43,11 @@ public class ProductService {
         return Map.of("products", products.stream().map(this::toProductMap).toList());
     }
 
+    public Map<String, Object> getRentableProducts() {
+        List<Product> products = productRepository.findRentable();
+        return Map.of("products", products.stream().map(this::toProductMap).toList());
+    }
+
     public Map<String, Object> getProductDetail(Integer id) {
         Product product = productRepository.findByIdAndActive(id)
                 .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
@@ -176,6 +181,7 @@ public class ProductService {
         map.put("thumbnail", product.getThumbnail());
         map.put("is_active", product.getIsActive());
         map.put("is_featured", product.getIsFeatured());
+        map.put("is_rentable", product.getIsRentable());
         map.put("created_at", product.getCreatedAt());
         map.put("updated_at", product.getUpdatedAt());
         map.put("category_name", product.getCategory().getName());

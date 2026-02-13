@@ -301,6 +301,17 @@
     }
   }
 
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(8px); opacity: 0.4; }
+  }
+
+  @keyframes scrollChevron {
+    0%   { opacity: 0; transform: translateY(-4px); }
+    50%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(4px); }
+  }
+
   /* 스크롤 애니메이션 - 초기 상태 */
   .animate-on-scroll {
     opacity: 0;
