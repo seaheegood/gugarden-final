@@ -165,12 +165,17 @@ function ProductList() {
                       <img
                         src={product.thumbnail}
                         alt={product.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: product.stock === 0 ? 0.3 : 1, transition: 'opacity 0.3s' }}
                       />
                     )}
-                    {product.sale_price && (
+                    {product.sale_price && product.stock !== 0 && (
                       <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#fff', color: '#000', fontSize: '10px', padding: '4px 8px', letterSpacing: '0.1em' }}>
                         SALE
+                      </span>
+                    )}
+                    {product.stock === 0 && (
+                      <span style={{ position: 'absolute', bottom: '12px', right: '12px', background: 'rgba(0,0,0,0.8)', color: '#fff', fontSize: '11px', padding: '6px 12px', letterSpacing: '0.15em', fontWeight: 500 }}>
+                        SOLD OUT
                       </span>
                     )}
                   </div>

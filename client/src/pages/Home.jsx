@@ -269,6 +269,7 @@ function Home() {
                       aspectRatio: "1/1",
                       background: "#1a1a1a",
                       marginBottom: "12px",
+                      position: "relative",
                     }}
                   >
                     {product.thumbnail && (
@@ -279,8 +280,15 @@ function Home() {
                           width: "100%",
                           height: "100%",
                           objectFit: "cover",
+                          opacity: product.stock === 0 ? 0.3 : 1,
+                          transition: "opacity 0.3s",
                         }}
                       />
+                    )}
+                    {product.stock === 0 && (
+                      <span style={{ position: "absolute", bottom: "12px", right: "12px", background: "rgba(0,0,0,0.8)", color: "#fff", fontSize: "11px", padding: "6px 12px", letterSpacing: "0.15em", fontWeight: 500 }}>
+                        SOLD OUT
+                      </span>
                     )}
                   </div>
                   <h4 style={{ fontSize: "14px", fontWeight: 400, marginBottom: "4px" }}>
