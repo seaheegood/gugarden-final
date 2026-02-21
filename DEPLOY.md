@@ -157,29 +157,31 @@ cp server/src/main/resources/application-prod.yml.example \
    server/src/main/resources/application-prod.yml
 ```
 
-`application-prod.yml`에서 반드시 수정할 항목:
+환경변수 파일(`.env`)을 생성합니다:
 
-```yaml
-server:
-  port: 9090                          # 사용할 포트
+```bash
+cp .env.example /var/www/gugarden/.env
+```
 
-spring:
-  datasource:
-    url: jdbc:mysql://<DB호스트>:3306/gugarden?...
-    username: <DB유저>
-    password: <DB비밀번호>
+`.env` 파일에서 반드시 수정할 항목:
 
-app:
-  jwt:
-    secret: <64자 이상 랜덤 키>       # openssl rand -base64 48
-  cookie:
-    secure: true
-    domain: <도메인>
-  client-url: https://<도메인>
-  naver:
-    client-id: <네이버 OAuth 클라이언트 ID>
-    client-secret: <네이버 OAuth 시크릿>
-    callback-url: https://<도메인>/api/auth/naver/callback
+```bash
+# 데이터베이스
+DB_URL=jdbc:mysql://<DB호스트>:3306/gugarden?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+DB_USERNAME=<DB유저>
+DB_PASSWORD=<DB비밀번호>
+
+# JWT (openssl rand -base64 48 로 생성)
+JWT_SECRET=<64자 이상 랜덤 키>
+
+# 도메인
+COOKIE_DOMAIN=<도메인>
+CLIENT_URL=https://<도메인>
+
+# 네이버 OAuth
+NAVER_CLIENT_ID=<네이버 OAuth 클라이언트 ID>
+NAVER_CLIENT_SECRET=<네이버 OAuth 시크릿>
+NAVER_CALLBACK_URL=https://<도메인>/api/auth/naver/callback
 ```
 
 ### 5. DB 스키마 생성
@@ -200,6 +202,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/var/www/gugarden/repo/server
+EnvironmentFile=/var/www/gugarden/.env
 ExecStart=/usr/bin/java -jar /var/www/gugarden/repo/server/build/libs/gugarden-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 Restart=always
 RestartSec=10
