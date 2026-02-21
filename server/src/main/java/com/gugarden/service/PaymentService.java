@@ -8,7 +8,10 @@ import com.gugarden.repository.OrderItemRepository;
 import com.gugarden.repository.OrderRepository;
 import com.gugarden.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +24,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PaymentService {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
+
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
+    private final Environment environment;
 
     @Value("${app.naverpay.client-id:}")
     private String naverClientId;
@@ -42,6 +48,10 @@ public class PaymentService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private boolean isProductionProfile() {
+        return Arrays.asList(environment.getActiveProfiles()).contains("prod");
+    }
+
     // ==================== NaverPay ====================
 
     public Map<String, Object> prepareNaverPay(Integer orderId, Integer userId) {
@@ -58,8 +68,11 @@ public class PaymentService {
                 ? items.get(0).getProductName() + " 외 " + (items.size() - 1) + "건"
                 : items.get(0).getProductName();
 
-        // 테스트 모드
         if (naverClientId == null || naverClientId.isEmpty()) {
+            if (isProductionProfile()) {
+                throw new BadRequestException("결제 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.");
+            }
+            log.warn("네이버페이 테스트 모드: API 키 미설정 (orderId={})", orderId);
             Map<String, Object> result = new HashMap<>();
             result.put("success", true);
             result.put("testMode", true);
@@ -70,7 +83,7 @@ public class PaymentService {
             return result;
         }
 
-        // 실제 네이버페이 API 호출 로직 (생략 - 테스트 모드와 동일한 구조)
+        // 실제 네이버페이 API 호출 로직
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
         result.put("orderId", orderId);
@@ -84,8 +97,11 @@ public class PaymentService {
         Order order = orderRepository.findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new NotFoundException("주문을 찾을 수 없습니다."));
 
-        // 테스트 모드
         if (naverClientId == null || naverClientId.isEmpty()) {
+            if (isProductionProfile()) {
+                throw new BadRequestException("결제 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.");
+            }
+            log.warn("네이버페이 테스트 승인: API 키 미설정 (orderId={})", orderId);
             order.setStatus(Order.OrderStatus.paid);
             order.setPaidAt(LocalDateTime.now());
             orderRepository.save(order);
@@ -131,6 +147,10 @@ public class PaymentService {
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
         if (naverClientId == null || naverClientId.isEmpty()) {
+            if (isProductionProfile()) {
+                throw new BadRequestException("결제 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.");
+            }
+            log.warn("네이버페이 테스트 취소: API 키 미설정 (orderId={})", orderId);
             result.put("testMode", true);
         }
         result.put("message", naverClientId == null || naverClientId.isEmpty() ? "테스트 결제가 취소되었습니다." : "결제가 취소되었습니다.");
@@ -153,6 +173,10 @@ public class PaymentService {
                 : items.get(0).getProductName();
 
         if (tossSecretKey == null || tossSecretKey.isEmpty()) {
+            if (isProductionProfile()) {
+                throw new BadRequestException("결제 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.");
+            }
+            log.warn("토스페이 테스트 모드: API 키 미설정 (orderId={})", orderId);
             Map<String, Object> result = new HashMap<>();
             result.put("success", true);
             result.put("testMode", true);
@@ -185,6 +209,10 @@ public class PaymentService {
         }
 
         if (tossSecretKey == null || tossSecretKey.isEmpty()) {
+            if (isProductionProfile()) {
+                throw new BadRequestException("결제 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.");
+            }
+            log.warn("토스페이 테스트 승인: API 키 미설정 (orderId={})", orderId);
             order.setStatus(Order.OrderStatus.paid);
             order.setPaymentMethod("toss");
             order.setPaymentKey(paymentKey != null ? paymentKey : "test_payment");
@@ -250,6 +278,10 @@ public class PaymentService {
         }
 
         if (tossSecretKey == null || tossSecretKey.isEmpty()) {
+            if (isProductionProfile()) {
+                throw new BadRequestException("결제 서비스가 설정되지 않았습니다. 관리자에게 문의하세요.");
+            }
+            log.warn("토스페이 테스트 취소: API 키 미설정 (orderId={})", orderId);
             restoreStock(orderId);
             order.setStatus(Order.OrderStatus.cancelled);
             orderRepository.save(order);
