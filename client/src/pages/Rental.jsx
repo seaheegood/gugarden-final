@@ -25,7 +25,7 @@ function Rental() {
         const response = await api.get('/products/rentable')
         setRentableProducts(response.data.products || [])
       } catch (error) {
-        console.error('렌트 가능 상품 조회 에러:', error)
+        // error silently handled
       }
     }
     fetchRentableProducts()
@@ -44,7 +44,6 @@ function Rental() {
       await api.post('/rental/inquiry', formData)
       setSubmitted(true)
     } catch (error) {
-      console.error('렌탈 문의 제출 에러:', error)
       alert(error.response?.data?.error || '문의 제출에 실패했습니다.')
     } finally {
       setIsSubmitting(false)

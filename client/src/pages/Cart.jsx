@@ -24,7 +24,7 @@ function Cart() {
       setItems(response.data.items)
       setTotalAmount(response.data.totalAmount)
     } catch (error) {
-      console.error('장바구니 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }

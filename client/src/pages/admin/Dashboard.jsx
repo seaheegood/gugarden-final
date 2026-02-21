@@ -15,7 +15,7 @@ function Dashboard() {
       const response = await api.get('/admin/dashboard')
       setData(response.data)
     } catch (error) {
-      console.error('대시보드 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }
