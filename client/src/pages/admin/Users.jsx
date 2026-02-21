@@ -30,7 +30,7 @@ function Users() {
         totalPages: response.data.pagination.totalPages,
       }))
     } catch (error) {
-      console.error('회원 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }

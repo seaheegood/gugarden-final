@@ -29,7 +29,7 @@ function Home() {
       const response = await api.get("/products/featured");
       setFeaturedProducts(response.data.products);
     } catch (error) {
-      console.error("피처드 상품 조회 에러:", error);
+      // error silently handled
     }
   };
 

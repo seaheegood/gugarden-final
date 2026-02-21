@@ -57,7 +57,7 @@ function MyPage() {
       const response = await api.get('/orders')
       setOrders(response.data.orders)
     } catch (error) {
-      console.error('주문 목록 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }

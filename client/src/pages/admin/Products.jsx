@@ -43,7 +43,7 @@ function Products() {
       const response = await api.get('/admin/categories')
       setCategories(response.data.categories)
     } catch (error) {
-      console.error('카테고리 조회 에러:', error)
+      // error silently handled
     }
   }
 
@@ -64,7 +64,7 @@ function Products() {
         totalPages: response.data.pagination.totalPages,
       }))
     } catch (error) {
-      console.error('상품 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }
@@ -75,7 +75,7 @@ function Products() {
       const response = await api.get(`/admin/products/${productId}/images`)
       setProductImages(response.data.images || [])
     } catch (error) {
-      console.error('상품 이미지 조회 에러:', error)
+      // error silently handled
       setProductImages([])
     }
   }

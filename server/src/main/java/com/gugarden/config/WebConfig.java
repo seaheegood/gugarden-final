@@ -23,13 +23,12 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")
                 .allowedOrigins(clientUrl)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
+                .allowedHeaders("Content-Type", "Authorization", "X-Requested-With")
                 .allowCredentials(true);
 
         registry.addMapping("/uploads/**")
                 .allowedOrigins(clientUrl)
                 .allowedMethods("GET")
-                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 

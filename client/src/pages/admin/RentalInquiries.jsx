@@ -29,7 +29,7 @@ function RentalInquiries() {
         totalPages: response.data.pagination.totalPages,
       }))
     } catch (error) {
-      console.error('렌탈 문의 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }
@@ -41,7 +41,6 @@ function RentalInquiries() {
       setSelectedInquiry(response.data.inquiry)
       setShowModal(true)
     } catch (error) {
-      console.error('문의 상세 조회 에러:', error)
       alert('문의 정보를 불러오는데 실패했습니다.')
     }
   }

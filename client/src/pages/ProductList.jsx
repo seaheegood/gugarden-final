@@ -50,7 +50,7 @@ function ProductList() {
       const response = await api.get(`/products/category/${category}`)
       setProducts(response.data.products)
     } catch (error) {
-      console.error('상품 목록 조회 에러:', error)
+      // error silently handled
       setProducts([])
     } finally {
       setLoading(false)

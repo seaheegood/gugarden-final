@@ -17,7 +17,7 @@ function OrderDetail() {
       const response = await api.get(`/orders/${id}`)
       setOrder(response.data.order)
     } catch (error) {
-      console.error('주문 조회 에러:', error)
+      // error silently handled
     } finally {
       setLoading(false)
     }
