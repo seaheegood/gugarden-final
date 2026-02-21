@@ -1,17 +1,23 @@
 # =====================================================
 # 프로덕션 설정 템플릿
-# 이 파일을 application-prod.yml 로 복사 후 실제 값을 입력하세요.
+# 이 파일을 application-prod.yml 로 복사 후 사용하세요.
 # application-prod.yml 은 .gitignore 에 포함되어 git 에 올라가지 않습니다.
+#
+# 모든 시크릿은 환경변수로 주입합니다.
+# 환경변수 설정 방법은 .env.example 파일을 참고하세요.
 #
 # 서버 실행:
 #   java -jar gugarden.jar --spring.profiles.active=prod
 # =====================================================
 
+server:
+  port: ${SERVER_PORT:9090}
+
 spring:
   datasource:
-    url: jdbc:mysql://DB_HOST:3306/gugarden?useSSL=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: YOUR_DB_USERNAME
-    password: YOUR_DB_PASSWORD
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
@@ -24,24 +30,28 @@ spring:
 
 app:
   jwt:
-    secret: YOUR_STRONG_RANDOM_JWT_SECRET_AT_LEAST_64_CHARS
+    secret: ${JWT_SECRET}
     expiration: 604800000
 
   upload:
-    dir: /var/www/gugarden/uploads
+    dir: ${UPLOAD_DIR:/var/www/gugarden/uploads}
 
-  client-url: https://yourdomain.com
+  cookie:
+    secure: true
+    domain: ${COOKIE_DOMAIN}
+
+  client-url: ${CLIENT_URL}
 
   naver:
-    client-id: YOUR_NAVER_CLIENT_ID
-    client-secret: YOUR_NAVER_CLIENT_SECRET
-    callback-url: https://yourdomain.com/api/auth/naver/callback
+    client-id: ${NAVER_CLIENT_ID}
+    client-secret: ${NAVER_CLIENT_SECRET}
+    callback-url: ${NAVER_CALLBACK_URL}
 
   naverpay:
-    client-id: YOUR_NAVERPAY_CLIENT_ID
-    client-secret: YOUR_NAVERPAY_CLIENT_SECRET
-    chain-id: YOUR_NAVERPAY_CHAIN_ID
+    client-id: ${NAVERPAY_CLIENT_ID:}
+    client-secret: ${NAVERPAY_CLIENT_SECRET:}
+    chain-id: ${NAVERPAY_CHAIN_ID:}
 
   toss:
-    client-key: YOUR_TOSS_CLIENT_KEY
-    secret-key: YOUR_TOSS_SECRET_KEY
+    client-key: ${TOSS_CLIENT_KEY:}
+    secret-key: ${TOSS_SECRET_KEY:}
