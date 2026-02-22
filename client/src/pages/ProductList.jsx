@@ -165,6 +165,7 @@ function ProductList() {
                       <img
                         src={product.thumbnail}
                         alt={product.name}
+                        loading="lazy"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: product.stock === 0 ? 0.3 : 1, transition: 'opacity 0.3s' }}
                       />
                     )}

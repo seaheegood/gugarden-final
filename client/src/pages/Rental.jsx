@@ -112,6 +112,7 @@ function Rental() {
                       <img
                         src={product.thumbnail}
                         alt={`Rental Work ${index + 1}`}
+                        loading="lazy"
                         style={{
                           width: '100%',
                           height: '100%',

@@ -96,7 +96,7 @@ function Cart() {
                 <div key={item.id} className="cart-item" style={{ padding: '24px', border: '1px solid #333' }}>
                   <Link to={`/product/${item.product_id}`}>
                     <div className="cart-item-image" style={{ background: '#1a1a1a', overflow: 'hidden' }}>
-                      <img src={item.thumbnail || '/images/placeholder.jpg'} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={item.thumbnail || '/images/placeholder.jpg'} alt={item.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                   </Link>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>

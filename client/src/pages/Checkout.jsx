@@ -71,6 +71,11 @@ function Checkout() {
       alert('배송 정보를 모두 입력해주세요.')
       return
     }
+    const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/
+    if (!phoneRegex.test(formData.recipientPhone)) {
+      alert('올바른 연락처를 입력해주세요. (예: 010-1234-5678)')
+      return
+    }
     setSubmitting(true)
     try {
       // 주문 생성
@@ -281,7 +286,7 @@ function Checkout() {
                   {items.map((item) => (
                     <div key={item.id} style={{ display: 'flex', gap: '12px' }}>
                       <div style={{ width: '48px', height: '48px', background: '#1a1a1a', overflow: 'hidden' }}>
-                        <img src={item.thumbnail || '/images/placeholder.jpg'} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={item.thumbnail || '/images/placeholder.jpg'} alt={item.name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div style={{ flex: 1 }}>
                         <p style={{ fontSize: '12px', marginBottom: '4px' }}>{item.name}</p>

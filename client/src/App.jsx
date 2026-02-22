@@ -1,30 +1,40 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import ScrollToTop from './components/ScrollToTop'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import ProductList from './pages/ProductList'
-import ProductDetail from './pages/ProductDetail'
-import Rental from './pages/Rental'
-import Ando from './pages/Ando'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import MyPage from './pages/MyPage'
-import Cart from './pages/Cart'
-import Checkout from './pages/Checkout'
-import OrderComplete from './pages/OrderComplete'
-import OrderDetail from './pages/OrderDetail'
-import PaymentComplete from './pages/PaymentComplete'
-import AuthCallback from './pages/AuthCallback'
-import TossPaymentSuccess from './pages/TossPaymentSuccess'
-import TossPaymentFail from './pages/TossPaymentFail'
-import AdminLayout from './components/AdminLayout'
-import AdminDashboard from './pages/admin/Dashboard'
-import AdminProducts from './pages/admin/Products'
-import AdminOrders from './pages/admin/Orders'
-import AdminUsers from './pages/admin/Users'
-import AdminRentalInquiries from './pages/admin/RentalInquiries'
+
+const ProductList = lazy(() => import('./pages/ProductList'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Rental = lazy(() => import('./pages/Rental'))
+const Ando = lazy(() => import('./pages/Ando'))
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
+const MyPage = lazy(() => import('./pages/MyPage'))
+const Cart = lazy(() => import('./pages/Cart'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const OrderComplete = lazy(() => import('./pages/OrderComplete'))
+const OrderDetail = lazy(() => import('./pages/OrderDetail'))
+const PaymentComplete = lazy(() => import('./pages/PaymentComplete'))
+const AuthCallback = lazy(() => import('./pages/AuthCallback'))
+const TossPaymentSuccess = lazy(() => import('./pages/TossPaymentSuccess'))
+const TossPaymentFail = lazy(() => import('./pages/TossPaymentFail'))
+const AdminLayout = lazy(() => import('./components/AdminLayout'))
+const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
+const AdminProducts = lazy(() => import('./pages/admin/Products'))
+const AdminOrders = lazy(() => import('./pages/admin/Orders'))
+const AdminUsers = lazy(() => import('./pages/admin/Users'))
+const AdminRentalInquiries = lazy(() => import('./pages/admin/RentalInquiries'))
+
+function PageLoader() {
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000' }}>
+      <p style={{ color: '#888' }}>로딩 중...</p>
+    </div>
+  )
+}
 
 // 인증 필요 라우트
 function PrivateRoute({ children }) {
@@ -58,7 +68,7 @@ function PublicRoute({ children }) {
 
 function AppRoutes() {
   return (
-    <>
+    <Suspense fallback={<PageLoader />}>
       <ScrollToTop />
       <Routes>
       <Route path="/" element={<Layout />}>
@@ -157,7 +167,7 @@ function AppRoutes() {
         <Route path="users" element={<AdminUsers />} />
       </Route>
     </Routes>
-    </>
+    </Suspense>
   )
 }
 

@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/rental/inquiry").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                 // Admin endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

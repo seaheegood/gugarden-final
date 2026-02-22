@@ -98,7 +98,7 @@ function OrderDetail() {
             {order.items?.map((item) => (
               <div key={item.id} style={{ display: 'flex', gap: '16px', padding: '16px', borderBottom: '1px solid #222' }}>
                 <div style={{ width: '64px', height: '64px', background: '#1a1a1a', overflow: 'hidden' }}>
-                  <img src={item.thumbnail || '/images/placeholder.jpg'} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={item.thumbnail || '/images/placeholder.jpg'} alt={item.product_name} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ fontSize: '14px', marginBottom: '4px' }}>{item.product_name}</p>

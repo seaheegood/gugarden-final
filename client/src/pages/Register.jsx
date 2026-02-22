@@ -26,6 +26,12 @@ function Register() {
     e.preventDefault()
     setError('')
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      setError('올바른 이메일 주소를 입력해주세요.')
+      return
+    }
+
     if (formData.password !== formData.passwordConfirm) {
       setError('비밀번호가 일치하지 않습니다.')
       return
@@ -34,6 +40,14 @@ function Register() {
     if (formData.password.length < 6) {
       setError('비밀번호는 6자 이상이어야 합니다.')
       return
+    }
+
+    if (formData.phone) {
+      const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/
+      if (!phoneRegex.test(formData.phone)) {
+        setError('올바른 연락처를 입력해주세요. (예: 010-1234-5678)')
+        return
+      }
     }
 
     setLoading(true)
