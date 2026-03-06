@@ -14,11 +14,12 @@
 3. [프로젝트 구조](#3-프로젝트-구조)
 4. [DB 설계](#4-db-설계)
 5. [API 설계](#5-api-설계)
-6. [인증/인가](#6-인증인가)
-7. [핵심 비즈니스 로직](#7-핵심-비즈니스-로직)
-8. [프론트엔드 구조](#8-프론트엔드-구조)
-9. [실행 방법](#9-실행-방법)
-10. [배포](#10-배포)
+6. [API 문서 (Swagger)](#6-api-문서-swagger)
+7. [인증/인가](#7-인증인가)
+8. [핵심 비즈니스 로직](#8-핵심-비즈니스-로직)
+9. [프론트엔드 구조](#9-프론트엔드-구조)
+10. [실행 방법](#10-실행-방법)
+11. [배포](#11-배포)
 
 ---
 
@@ -279,7 +280,36 @@ rental_inquiries (독립 테이블)
 
 ---
 
-## 6. 인증/인가
+## 6. API 문서 (Swagger)
+
+Swagger UI를 통해 전체 API 문서를 확인하고 테스트할 수 있습니다.
+
+- **로컬**: http://localhost:8080/swagger-ui/index.html
+- **운영**: https://gugarden.hongshin99.com/swagger-ui/index.html
+- **OpenAPI JSON**: `/v3/api-docs`
+
+### 설정
+
+- `springdoc-openapi-starter-webmvc-ui:2.8.8` 사용
+- JWT 인증이 필요한 API는 Swagger UI에서 Bearer 토큰을 입력하여 테스트 가능
+- 컨트롤러별 `@Tag`, `@Operation`, `@Parameter` 어노테이션으로 문서화
+
+### API 그룹
+
+| 태그 | 설명 | 인증 |
+|------|------|------|
+| 인증 | 회원가입, 로그인, OAuth, 프로필 관리 | 일부 |
+| 상품 | 상품 조회/등록/수정/삭제 | 조회: 공개, 관리: Admin |
+| 장바구니 | 장바구니 CRUD | Bearer |
+| 주문 | 주문 생성/조회/취소 | Bearer |
+| 결제 | 네이버페이/토스페이먼츠 결제 | Bearer |
+| 렌탈 | 렌탈 문의 제출 | 공개 |
+| 관리자 | 대시보드, 회원/주문/상품/문의 관리 | Admin |
+| 헬스체크 | 서버 상태 확인 | 공개 |
+
+---
+
+## 7. 인증/인가
 
 ### JWT + httpOnly 쿠키 기반 Stateless 인증
 
@@ -348,9 +378,9 @@ rental_inquiries (독립 테이블)
 
 ---
 
-## 7. 핵심 비즈니스 로직
+## 8. 핵심 비즈니스 로직
 
-### 7-1. 주문 생성 프로세스 (`@Transactional`)
+### 8-1. 주문 생성 프로세스 (`@Transactional`)
 
 ```
 1. 배송 정보 유효성 검사
@@ -368,7 +398,7 @@ rental_inquiries (독립 테이블)
 
 > 전체 과정이 하나의 트랜잭션으로 처리되어, 중간에 실패하면 모두 롤백됩니다.
 
-### 7-2. 주문 취소 프로세스 (`@Transactional`)
+### 8-2. 주문 취소 프로세스 (`@Transactional`)
 
 ```
 1. 주문 소유권 확인 (본인 주문인지)
@@ -377,7 +407,7 @@ rental_inquiries (독립 테이블)
 4. 주문 상태 → cancelled
 ```
 
-### 7-3. 주문 상태 흐름
+### 8-3. 주문 상태 흐름
 
 ```
 pending → paid → preparing → shipped → delivered
@@ -385,7 +415,7 @@ pending → paid → preparing → shipped → delivered
    └────────┴──→ cancelled (재고 자동 복구)
 ```
 
-### 7-4. 결제 연동 (NaverPay / TossPay)
+### 8-4. 결제 연동 (NaverPay / TossPay)
 
 ```
                   ┌─── API 키 미설정 ──→ 테스트 모드 (자동 승인)
@@ -401,14 +431,14 @@ pending → paid → preparing → shipped → delivered
 - 테스트 모드: API 키가 비어있으면 자동으로 결제 성공 처리
 - TossPay 금액 검증: 서버에 저장된 주문 금액과 클라이언트 전달 금액 비교
 
-### 7-5. 상품 삭제 정책
+### 8-5. 상품 삭제 정책
 
 ```
 주문 이력 존재? ── Yes → 비활성화 (is_active = false, 데이터 보존)
               └── No  → 완전 삭제 (DB에서 제거)
 ```
 
-### 7-6. 회원 탈퇴 정책
+### 8-6. 회원 탈퇴 정책
 
 ```
 1. 장바구니 삭제
@@ -419,7 +449,7 @@ pending → paid → preparing → shipped → delivered
 3. 주문 기록은 유지 (user_id FK 보존)
 ```
 
-### 7-7. 파일 업로드
+### 8-7. 파일 업로드
 
 - 허용 타입: jpeg, jpg, png, gif, webp
 - 최대 크기: 10MB (파일), 50MB (요청)
@@ -429,7 +459,7 @@ pending → paid → preparing → shipped → delivered
 
 ---
 
-## 8. 프론트엔드 구조
+## 9. 프론트엔드 구조
 
 ### 라우팅 (총 20개 페이지)
 
@@ -471,7 +501,7 @@ pending → paid → preparing → shipped → delivered
 
 ---
 
-## 9. 실행 방법
+## 10. 실행 방법
 
 ### 사전 요구사항
 
@@ -505,7 +535,7 @@ npm run dev
 
 ---
 
-## 10. 배포
+## 11. 배포
 
 운영 사이트: **https://gugarden.hongshin99.com**
 
