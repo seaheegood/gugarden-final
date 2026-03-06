@@ -7,6 +7,8 @@ import com.gugarden.security.CookieUtil;
 import com.gugarden.security.JwtTokenProvider;
 import com.gugarden.security.UserPrincipal;
 import com.gugarden.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+@Tag(name = "인증", description = "회원가입, 로그인, 내 정보, 소셜 로그인 API")
 @Slf4j
 @RestController
 @RequestMapping("/api/auth")
@@ -44,6 +47,7 @@ public class AuthController {
     @Value("${app.naver.callback-url}")
     private String naverCallbackUrl;
 
+    @Operation(summary = "회원가입")
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody RegisterRequest request) {
         Map<String, Object> result = authService.register(request);
@@ -57,6 +61,7 @@ public class AuthController {
                 .body(result);
     }
 
+    @Operation(summary = "로그인")
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
         Map<String, Object> result = authService.login(request);
@@ -70,11 +75,13 @@ public class AuthController {
                 .body(result);
     }
 
+    @Operation(summary = "내 정보 조회")
     @GetMapping("/me")
     public ResponseEntity<Map<String, Object>> getMe(@AuthenticationPrincipal UserPrincipal principal) {
         return ResponseEntity.ok(authService.getMe(principal.getId()));
     }
 
+    @Operation(summary = "내 정보 수정")
     @PutMapping("/me")
     public ResponseEntity<Map<String, String>> updateProfile(
             @AuthenticationPrincipal UserPrincipal principal,
@@ -82,6 +89,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.updateProfile(principal.getId(), request));
     }
 
+    @Operation(summary = "비밀번호 변경")
     @PutMapping("/password")
     public ResponseEntity<Map<String, String>> changePassword(
             @AuthenticationPrincipal UserPrincipal principal,
@@ -97,6 +105,7 @@ public class AuthController {
                 .body(result);
     }
 
+    @Operation(summary = "회원 탈퇴", description = "개인정보를 익명화 처리합니다.")
     @DeleteMapping("/me")
     public ResponseEntity<Map<String, String>> deleteAccount(@AuthenticationPrincipal UserPrincipal principal) {
         Map<String, String> result = authService.deleteAccount(principal.getId());
@@ -107,6 +116,7 @@ public class AuthController {
                 .body(result);
     }
 
+    @Operation(summary = "로그아웃")
     @PostMapping("/logout")
     public ResponseEntity<Map<String, String>> logout() {
         ResponseCookie clearCookie = cookieUtil.createClearCookie();
@@ -115,6 +125,7 @@ public class AuthController {
                 .body(Map.of("message", "로그아웃되었습니다."));
     }
 
+    @Operation(summary = "인증 코드 교환", description = "소셜 로그인 콜백의 일회용 코드를 JWT로 교환합니다.")
     @PostMapping("/exchange-code")
     public ResponseEntity<Map<String, Object>> exchangeCode(@RequestBody Map<String, String> request) {
         String code = request.get("code");
@@ -144,6 +155,7 @@ public class AuthController {
 
     // --- 네이버 OAuth ---
 
+    @Operation(summary = "네이버 로그인", description = "네이버 OAuth 로그인 페이지로 리다이렉트합니다.")
     @GetMapping("/naver")
     public ResponseEntity<Void> naverLogin() {
         String state = jwtTokenProvider.generateStateToken();
@@ -158,6 +170,7 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "네이버 로그인 콜백", description = "네이버 OAuth 콜백 처리 후 클라이언트로 리다이렉트합니다.")
     @GetMapping("/naver/callback")
     public ResponseEntity<Void> naverCallback(@RequestParam String code, @RequestParam String state) {
         // OAuth state 검증 (CSRF 방지)
