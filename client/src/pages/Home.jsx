@@ -86,6 +86,7 @@ function Home() {
             }}
           >
             구의정원
+            <span className="sr-only"> - 테라리움, 비바리움, 팔루다리움 전문 식물 인테리어</span>
           </h1>
           <p className="hero-animate-delay-2" style={{ color: "#ddd", marginBottom: "48px" }}>
             자연을 담은 작은 정원

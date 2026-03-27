@@ -82,7 +82,7 @@ function Rental() {
         />
         <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 20px' }}>
           <p style={{ fontSize: '12px', letterSpacing: '0.4em', color: '#ccc', marginBottom: '24px' }}>FOR BUSINESS</p>
-          <h1 className="hero-title" style={{ fontWeight: 200, letterSpacing: '0.2em', marginBottom: '24px', color: '#fff' }}>RENTAL SERVICE</h1>
+          <h1 className="hero-title" style={{ fontWeight: 200, letterSpacing: '0.2em', marginBottom: '24px', color: '#fff' }}>RENTAL SERVICE<span className="sr-only"> - 구의정원 테라리움 렌탈</span></h1>
           <p style={{ color: '#ccc' }}>공간에 자연을 더하는 테라리움 렌탈 서비스</p>
         </div>
         <ScrollIndicator onClick={() => contentRef.current?.scrollIntoView({ behavior: 'smooth' })} />

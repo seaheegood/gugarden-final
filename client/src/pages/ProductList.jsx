@@ -105,6 +105,7 @@ function ProductList() {
             <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 20px' }}>
               <h1 className="hero-title" style={{ fontWeight: 200, letterSpacing: '0.3em', marginBottom: '16px', color: '#fff' }}>
                 {info.title}
+                <span className="sr-only"> - {info.subtitle}</span>
               </h1>
               <p style={{ color: '#ccc', letterSpacing: '0.1em' }}>{info.subtitle}</p>
             </div>
@@ -123,6 +124,7 @@ function ProductList() {
         <section style={{ paddingTop: '140px', paddingBottom: '48px', textAlign: 'center', borderBottom: '1px solid #222' }}>
           <h1 style={{ fontSize: '32px', fontWeight: 200, letterSpacing: '0.3em', marginBottom: '16px', color: '#fff' }}>
             {info.title}
+            <span className="sr-only"> - {info.subtitle}</span>
           </h1>
           <p style={{ color: '#888', letterSpacing: '0.1em', marginBottom: '24px' }}>{info.subtitle}</p>
           <p style={{ color: '#666', lineHeight: 1.8, maxWidth: '800px', margin: '0 auto', padding: '0 20px' }}>{info.description}</p>

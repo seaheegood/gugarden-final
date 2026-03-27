@@ -113,6 +113,7 @@ function Ando() {
             }}
           >
             ANDO
+            <span className="sr-only"> - 일산 테라리움 원데이 클래스</span>
           </h1>
           <p style={{ color: "#ccc" }}>구의정원 작가의 작업실</p>
         </div>
