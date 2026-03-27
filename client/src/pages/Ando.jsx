@@ -69,7 +69,7 @@ function Ando() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundImage: "url(/images/ando_main.jpeg)",
+          backgroundImage: "url(/images/ando_main.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           position: "relative",

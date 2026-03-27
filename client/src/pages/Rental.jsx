@@ -65,7 +65,7 @@ function Rental() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundImage: 'url(/images/rental_main.jpeg)',
+        backgroundImage: 'url(/images/rental_main.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         position: 'relative',

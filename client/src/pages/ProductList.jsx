@@ -9,25 +9,25 @@ const categoryInfo = {
     title: 'TERRARIUM',
     subtitle: '밀폐된 유리 안의 작은 생태계',
     description: '테라리움은 밀폐된 유리 용기 안에서 자체적인 생태계를 형성하는 작은 정원입니다. 최소한의 관리로 자연의 아름다움을 오래도록 즐길 수 있습니다.',
-    image: '/images/terrarium_main.jpeg',
+    image: '/images/terrarium_main.webp',
   },
   vivarium: {
     title: 'VIVARIUM',
     subtitle: '살아있는 자연을 담은 공간',
     description: '비바리움은 식물과 동물이 함께 어우러진 살아있는 생태 공간입니다. 열대 우림부터 사막까지, 다양한 자연 환경을 재현합니다.',
-    image: '/images/vivarium_main.jpeg',
+    image: '/images/vivarium_main.webp',
   },
   paludarium: {
     title: 'PALUDARIUM',
     subtitle: '육지와 수중이 만나는 자연',
     description: '팔루다리움은 육지와 수중 환경이 결합된 독특한 생태계입니다. 물과 땅이 어우러진 자연의 조화를 경험할 수 있습니다.',
-    image: '/images/paludarium_main.jpeg',
+    image: '/images/paludarium_main.webp',
   },
   elements: {
     title: 'ELEMENTS',
     subtitle: '테라리움을 구성하는 재료와 소품',
     description: '테라리움 제작에 필요한 다양한 재료와 소품을 만나보세요. 용기, 식물, 토양, 장식 등 모든 구성 요소를 갖추고 있습니다.',
-    image: '/images/elements_main.jpeg',
+    image: '/images/elements_main.webp',
   },
 }
 

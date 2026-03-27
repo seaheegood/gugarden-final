@@ -49,7 +49,7 @@ function Home() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundImage: "url(/images/home_main.jpeg)",
+          backgroundImage: "url(/images/home_main.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           position: "relative",
@@ -165,7 +165,7 @@ function Home() {
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/terrarium_main.jpeg)",
+                  backgroundImage: "url(/images/terrarium_main.webp)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
@@ -183,7 +183,7 @@ function Home() {
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/vivarium_main.jpeg)",
+                  backgroundImage: "url(/images/vivarium_main.webp)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
@@ -201,7 +201,7 @@ function Home() {
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/paludarium_main.jpeg)",
+                  backgroundImage: "url(/images/paludarium_main.webp)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
@@ -219,7 +219,7 @@ function Home() {
                 className="product-image-wrap"
                 style={{
                   aspectRatio: "4/3",
-                  backgroundImage: "url(/images/elements_main.jpeg)",
+                  backgroundImage: "url(/images/elements_main.webp)",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   marginBottom: "16px",
@@ -335,7 +335,7 @@ function Home() {
           <div
             style={{
               aspectRatio: "4/3",
-              backgroundImage: "url(/images/rental_main.jpeg)",
+              backgroundImage: "url(/images/rental_main.webp)",
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}

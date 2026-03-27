@@ -176,7 +176,7 @@ function Footer() {
         className="footer-image"
         style={{
           width: "100%",
-          backgroundImage: "url(/images/footer.jpeg)",
+          backgroundImage: "url(/images/footer.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
