@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../api'
 import ScrollIndicator from '../components/ScrollIndicator'
+import SEO from '../components/SEO'
 
 function Rental() {
   const navigate = useNavigate()
@@ -54,6 +55,10 @@ function Rental() {
 
   return (
     <div>
+      <SEO
+        title="렌탈 서비스"
+        description="구의정원 테라리움 렌탈 서비스. 사무실, 매장, 행사장에 자연을 더하세요. 맞춤형 식물 인테리어를 합리적인 가격으로 이용하실 수 있습니다."
+      />
       {/* 히어로 섹션 */}
       <section className="hero-section" style={{
         height: '80vh',

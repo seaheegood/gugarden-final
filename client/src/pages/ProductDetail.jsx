@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import api from '../api'
+import SEO from '../components/SEO'
 
 function ProductDetail() {
   const { id } = useParams()
@@ -91,6 +92,10 @@ function ProductDetail() {
 
   return (
     <div style={{ paddingTop: '80px', background: '#000', minHeight: '100vh' }}>
+      <SEO
+        title={product.name}
+        description={product.description ? product.description.slice(0, 155) : `구의정원 ${product.name} - 지금 구의정원에서 만나보세요.`}
+      />
       {/* 브레드크럼 */}
       <div className="responsive-container" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
         <nav style={{ fontSize: '12px', color: '#666', display: 'flex', alignItems: 'center', gap: '8px' }}>

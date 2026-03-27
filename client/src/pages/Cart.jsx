@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
+import SEO from '../components/SEO'
 
 function Cart() {
   const navigate = useNavigate()
@@ -78,6 +79,7 @@ function Cart() {
 
   return (
     <div style={{ paddingTop: '80px', minHeight: '100vh', background: '#000' }}>
+      <SEO title="장바구니" description="구의정원 장바구니. 선택하신 상품을 확인하고 주문을 완료하세요." />
       <div className="responsive-container" style={{ maxWidth: '800px', paddingTop: '64px', paddingBottom: '64px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 300, letterSpacing: '0.2em', textAlign: 'center', marginBottom: '48px' }}>CART</h1>
 

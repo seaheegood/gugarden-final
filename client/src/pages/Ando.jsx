@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import ScrollIndicator from '../components/ScrollIndicator'
+import SEO from '../components/SEO'
 
 function Ando() {
   const contentRef = useRef(null)
@@ -56,6 +57,10 @@ function Ando() {
 
   return (
     <div>
+      <SEO
+        title="안도 클래스 | 일산 테라리움"
+        description="일산 테라리움 원데이 클래스 - 구의정원에서 나만의 작은 정원을 직접 만들어보세요. 초보자도 쉽게 참여할 수 있는 테라리움 체험 수업입니다."
+      />
       {/* 히어로 섹션 */}
       <section
         className="hero-section"

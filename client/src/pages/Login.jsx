@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import SEO from '../components/SEO'
 
 function Login() {
   const navigate = useNavigate()
@@ -43,6 +44,7 @@ function Login() {
 
   return (
     <div style={{ paddingTop: '80px', minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <SEO title="로그인" description="구의정원 회원 로그인. 로그인하고 특별한 혜택을 만나보세요." />
       <div style={{ width: '100%', maxWidth: '400px', padding: '0 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <h1 style={{ fontSize: '24px', fontWeight: 300, letterSpacing: '0.2em', marginBottom: '16px' }}>LOGIN</h1>

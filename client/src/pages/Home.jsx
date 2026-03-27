@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../api";
 import useScrollAnimation from "../hooks/useScrollAnimation";
 import ScrollIndicator from "../components/ScrollIndicator";
+import SEO from "../components/SEO";
 
 function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -39,6 +40,7 @@ function Home() {
 
   return (
     <div>
+      <SEO />
       {/* 히어로 */}
       <section
         className="hero-section"

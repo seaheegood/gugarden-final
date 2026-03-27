@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import api from '../api'
 import ScrollIndicator from '../components/ScrollIndicator'
+import SEO from '../components/SEO'
 
 const categoryInfo = {
   terrarium: {
@@ -74,6 +75,10 @@ function ProductList() {
 
   return (
     <div style={{ background: '#000', minHeight: '100vh' }}>
+      <SEO
+        title={info.title}
+        description={`구의정원 ${info.title} - ${info.subtitle}. ${info.description}`}
+      />
       {/* 히어로 섹션 - 이미지가 있는 카테고리만 표시 */}
       {info.image ? (
         <>
